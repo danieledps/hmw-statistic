@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dataset and Distribution - Statistics Homework</title>
+  <script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+    options: { renderActions: { addMenu: [] } }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script src="../js/mathjax/es5/tex-mml-chtml.js" defer></script>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 mx-auto">
+          <p class="text-muted mb-2">
+            <i class="bi bi-calendar3 me-1"></i>October 15, 2025
+          </p>
+          <h1 class="display-6 gradient-text mb-2">Dataset and Distribution</h1>
+          <p class="lead mb-0">Concepts of Dataset and Distribution with practical examples — Daniele De Pascali 1984462</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Explain Dataset and Distribution</h2>
+      <p>A dataset is a structured collection of observations recorded across variables. Rows are observations (records), and columns are variables (attributes such as department, age, MFA enabled).</p>
+      <p>A distribution describes how a variable’s values are spread across possible outcomes. For categorical variables, it is summarized by counts or proportions. For numerical variables, it can be summarized using bins and metrics of center and spread.</p>
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="p-3 border rounded featured-post">
+            <h3 class="h6 text-muted mb-3">Key notions</h3>
+                <ul class="mb-0">
+                <li>Frequency: <span style="white-space:nowrap;">\( f_i \)</span> is the count in category/bin <span style="white-space:nowrap;">\( i \)</span>.</li>
+                <li>Relative frequency: <span style="white-space:nowrap;">\( \displaystyle p_i = \frac{f_i}{n} \)</span> where <span style="white-space:nowrap;">\( n \)</span> is the total count.</li>
+                <li>Mean (numeric): <span style="white-space:nowrap;">\( \displaystyle \bar{x} = \frac{1}{n}\sum_{j=1}^{n} x_j \)</span>.</li>
+                <li>Median (numeric): middle value in the ordered data.</li>
+                </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="p-3 border rounded">
+                <div class="text-muted small">Variable types</div>
+                <div class="fw-bold">Categorical / Numeric</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 border rounded">
+                <div class="text-muted small">Univariate</div>
+                <div class="fw-bold">1 variable</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 border rounded">
+                <div class="text-muted small">Bivariate</div>
+                <div class="fw-bold">2 variables</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 border rounded">
+                <div class="text-muted small">Total records</div>
+                <div class="fw-bold">12</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Simulated DBMS: Schema and Data</h2>
+      <p class="mb-3">SQL-style schema and inserts, followed by the same dataset as an HTML table.</p>
+
+      <pre class="p-3 border rounded bg-light"><code>CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(20),
+  department VARCHAR(20),
+  age INT,
+  logins_per_week INT,
+  mfa_enabled BOOLEAN
+);
+
+INSERT INTO users (id, name, department, age, logins_per_week, mfa_enabled) VALUES
+(1,  'Alice',  'IT',      24, 15, TRUE),
+(2,  'Bob',    'Finance', 31,  9, TRUE),
+(3,  'Carla',  'HR',      27,  6, FALSE),
+(4,  'Dan',    'IT',      29, 12, TRUE),
+(5,  'Eva',    'Finance', 35,  8, FALSE),
+(6,  'Fabio',  'IT',      41, 14, TRUE),
+(7,  'Giulia', 'HR',      26,  7, TRUE),
+(8,  'Henry',  'IT',      23, 11, FALSE),
+(9,  'Irene',  'Finance', 33,  5, TRUE),
+(10, 'Luca',   'IT',      28, 10, TRUE),
+(11, 'Marta',  'HR',      30,  4, FALSE),
+(12, 'Nico',   'Finance', 36,  6, TRUE);</code></pre>
+
+      <div class="table-responsive">
+        <table class="table table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th><th>Name</th><th>Department</th><th>Age</th><th>Logins/week</th><th>MFA Enabled</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Alice</td><td>IT</td><td>24</td><td>15</td><td>Yes</td></tr>
+            <tr><td>2</td><td>Bob</td><td>Finance</td><td>31</td><td>9</td><td>Yes</td></tr>
+            <tr><td>3</td><td>Carla</td><td>HR</td><td>27</td><td>6</td><td>No</td></tr>
+            <tr><td>4</td><td>Dan</td><td>IT</td><td>29</td><td>12</td><td>Yes</td></tr>
+            <tr><td>5</td><td>Eva</td><td>Finance</td><td>35</td><td>8</td><td>No</td></tr>
+            <tr><td>6</td><td>Fabio</td><td>IT</td><td>41</td><td>14</td><td>Yes</td></tr>
+            <tr><td>7</td><td>Giulia</td><td>HR</td><td>26</td><td>7</td><td>Yes</td></tr>
+            <tr><td>8</td><td>Henry</td><td>IT</td><td>23</td><td>11</td><td>No</td></tr>
+            <tr><td>9</td><td>Irene</td><td>Finance</td><td>33</td><td>5</td><td>Yes</td></tr>
+            <tr><td>10</td><td>Luca</td><td>IT</td><td>28</td><td>10</td><td>Yes</td></tr>
+            <tr><td>11</td><td>Marta</td><td>HR</td><td>30</td><td>4</td><td>No</td></tr>
+            <tr><td>12</td><td>Nico</td><td>Finance</td><td>36</td><td>6</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-muted">n = 12 records.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Univariate Distributions (k ≤ 3)</h2>
+
+      <div class="mb-4">
+        <h3 class="h5 mb-3">1) Age (grouped)</h3>
+        <div class="row g-3">
+          <div class="col-lg-7">
+            <div class="mb-2 small text-muted">20–24</div>
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 50%; background-color:#2c5364;"></div>
+            </div>
+
+            <div class="mb-2 small text-muted">25–29</div>
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 100%; background-color:#203a43;"></div>
+            </div>
+
+            <div class="mb-2 small text-muted">30–34</div>
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 75%; background-color:#0f2027;"></div>
+            </div>
+
+            <div class="mb-2 small text-muted">35–39</div>
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 50%; background-color:#6c757d;"></div>
+            </div>
+
+            <div class="mb-2 small text-muted">40–44</div>
+            <div class="progress mb-1" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 25%; background-color:#adb5bd;"></div>
+            </div>
+            <div class="text-muted small">Bars scaled to the maximum bin count (max = 4).</div>
+          </div>
+          <div class="col-lg-5">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Mean age</div>
+                  <div class="fw-bold">\( \bar{x} = 30.25 \)</div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Median age</div>
+                  <div class="fw-bold">29.5</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="p-3 border rounded">
+                  <div class="text-muted small">Bins and counts</div>
+                  <div>20–24: 2, 25–29: 4, 30–34: 3, 35–39: 2, 40–44: 1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 mb-3">2) Department (categorical)</h3>
+        <div class="row g-3">
+          <div class="col-lg-8">
+            <div class="mb-2 small text-muted">IT (5)</div>
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 100%; background-color:#2c5364;"></div>
+            </div>
+
+            <div class="mb-2 small text-muted">Finance (4)</div>
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 80%; background-color:#203a43;"></div>
+            </div>
+
+            <div class="mb-2 small text-muted">HR (3)</div>
+            <div class="progress mb-1" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 60%; background-color:#0f2027;"></div>
+            </div>
+            <div class="text-muted small">Relative to max category count (5 in IT).</div>
+          </div>
+          <div class="col-lg-4">
+            <div class="p-3 border rounded">
+              <div class="text-muted small">Proportions</div>
+              <div>IT: 41.7% • Finance: 33.3% • HR: 25.0%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="h5 mb-3">3) MFA Enabled (binary)</h3>
+        <div class="row g-3">
+          <div class="col-lg-8">
+            <div class="mb-2 small text-muted">Yes (8)</div>
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 100%; background-color:#203a43;"></div>
+            </div>
+
+            <div class="mb-2 small text-muted">No (4)</div>
+            <div class="progress mb-1" style="height: 12px;">
+              <div class="progress-bar" role="progressbar" style="width: 50%; background-color:#6c757d;"></div>
+            </div>
+            <div class="text-muted small">Relative to max group count (8 with MFA = Yes).</div>
+          </div>
+          <div class="col-lg-4">
+            <div class="p-3 border rounded">
+              <div class="text-muted small">Proportions</div>
+              <div>Yes: 66.7% • No: 33.3%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-4">
+      <h2 class="h4 mb-3">Bivariate Distribution: Department × MFA</h2>
+      <p class="mb-3">Counts and share of total \( n = 12 \).</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th>Department</th>
+              <th>MFA: Yes</th>
+              <th>MFA: No</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="text-start">IT</th>
+              <td class="bg-gradient-cyber text-white">4<br><span class="text-white-50">33.3%</span></td>
+              <td style="background:#e9ecef;">1<br><span class="text-muted">8.3%</span></td>
+              <td class="table-secondary fw-semibold">5<br><span class="text-muted">41.7%</span></td>
+            </tr>
+            <tr>
+              <th class="text-start">Finance</th>
+              <td style="background:#a3b9c4; color:#0f2027;">3<br><span class="text-dark">25.0%</span></td>
+              <td style="background:#e9ecef;">1<br><span class="text-muted">8.3%</span></td>
+              <td class="table-secondary fw-semibold">4<br><span class="text-muted">33.3%</span></td>
+            </tr>
+            <tr>
+              <th class="text-start">HR</th>
+              <td style="background:#ced9de; color:#203a43;">1<br><span class="text-dark">8.3%</span></td>
+              <td style="background:#bfcbd1; color:#0f2027;">2<br><span class="text-dark">16.7%</span></td>
+              <td class="table-secondary fw-semibold">3<br><span class="text-muted">25.0%</span></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="table-light">
+              <th>Total</th>
+              <th class="fw-semibold">8<br><span class="text-muted">66.7%</span></th>
+              <th class="fw-semibold">4<br><span class="text-muted">33.3%</span></th>
+              <th class="fw-semibold">12<br><span class="text-muted">100%</span></th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <p class="text-muted">MFA adoption is highest in IT (4/5), moderate in Finance (3/4), lowest in HR (1/3).</p>
+    </section>
+     <section class="mb-5">
+      <h2 class="h4 fw-bold mb-3">Letter Distribution and Caesar Cipher (User Text)</h2>
+
+      <div class="p-3 border rounded mb-4">
+        <label for="manualText" class="form-label fw-semibold">Enter an Italian text:</label>
+        <textarea class="form-control mb-3" id="manualText" rows="3" placeholder="Write your text here..."></textarea>
+        <div class="row g-3 align-items-end">
+          <div class="col-sm-4">
+            <label for="encShift" class="form-label">Encryption shift (0–25)</label>
+            <input type="number" class="form-control" id="encShift" min="0" max="25" value="3">
+          </div>
+          <div class="col-sm-8">
+            <button class="btn btn-dark mt-2" id="analyzeBtn">Analyze</button>
+            <small id="warn-msg" class="ms-2 text-danger"></small>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="h5 mb-3">Step 1 — Letter Distribution (original text)</h3>
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered text-center align-middle">
+          <thead class="table-light">
+            <tr><th>Letter</th><th>Count</th><th>Frequency (%)</th><th>Graph</th></tr>
+          </thead>
+          <tbody id="freqBody"></tbody>
+        </table>
+      </div>
+
+      <h3 class="h5 mb-3">Step 2 — Caesar Cipher</h3>
+      <div class="p-3 border rounded bg-light mb-3">
+        <p class="mb-1 fw-semibold">Encrypted text:</p>
+        <p id="encrypted-text" class="mb-0 text-muted fst-italic"></p>
+      </div>
+
+      <h3 class="h5 mb-3">Step 3 — Decoding (shift estimation by aligning distributions)</h3>
+      <p>The shift is estimated by aligning the letter distribution of the encrypted text with that of your original text. The Caesar cipher rotates letter frequencies: we find the rotation that best overlaps with your source distribution.</p>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-7">
+          <h6 class="fw-semibold">Distribution comparison (your text only)</h6>
+          <div class="table-responsive">
+            <table class="table table-sm table-striped text-center align-middle">
+              <thead class="table-light">
+                <tr><th>Letter</th><th>Original (%)</th><th>Encrypted (%)</th><th>Realigned (%)</th></tr>
+              </thead>
+              <tbody id="compareBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <h6 class="fw-semibold">Decoding (estimated shift)</h6>
+          <div class="p-3 border rounded bg-light">
+            <p id="decoded-text" class="mb-1 text-success fw-bold fst-italic"></p>
+            <small class="text-muted" id="guessed-shift"></small>
+          </div>
+          <small class="text-muted d-block mt-2">Short texts may be less stable; longer texts align perfectly.</small>
+        </div>
+      </div>
+
+      <script>
+        const A = 'a'.charCodeAt(0);
+
+        function normalizeText(t) {
+          return t.toLowerCase()
+                  .normalize('NFD')
+                  .replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function countLetters(t) {
+          const counts = new Array(26).fill(0);
+          let total = 0;
+          for (const ch of t) {
+            if (ch >= 'a' && ch <= 'z') {
+              counts[ch.charCodeAt(0) - A]++;
+              total++;
+            }
+          }
+          return { counts, total };
+        }
+
+        function toPerc(counts, total) {
+          return counts.map(c => total ? (100 * c / total) : 0);
+        }
+
+        function caesarEncrypt(t, s) {
+          return t.replace(/[a-z]/g, c => {
+            const i = c.charCodeAt(0) - A;
+            return String.fromCharCode(((i + s) % 26) + A);
+          });
+        }
+
+        function caesarDecrypt(t, s) {
+          return t.replace(/[a-z]/g, c => {
+            const i = c.charCodeAt(0) - A;
+            return String.fromCharCode(((i - s + 26) % 26) + A);
+          });
+        }
+
+        function rotateCounts(counts, s) {
+          const out = new Array(26);
+          for (let i = 0; i < 26; i++) out[i] = counts[(i + s) % 26];
+          return out;
+        }
+
+        function guessShiftByAlignment(plainCounts, cipherCounts) {
+          let bestS = 0, bestErr = Infinity;
+          for (let s = 0; s < 26; s++) {
+            const rot = rotateCounts(cipherCounts, s);
+            let err = 0;
+            for (let i = 0; i < 26; i++) {
+              const d = plainCounts[i] - rot[i];
+              err += d * d;
+            }
+            if (err < bestErr) { bestErr = err; bestS = s; }
+          }
+          return bestS;
+        }
+
+        function renderPlainFreq(text) {
+          const { counts, total } = countLetters(text);
+          const perc = toPerc(counts, total);
+          const tbody = document.getElementById("freqBody");
+          tbody.innerHTML = "";
+          for (let i = 0; i < 26; i++) {
+            if (counts[i] > 0) {
+              const letter = String.fromCharCode(A + i);
+              tbody.insertAdjacentHTML("beforeend", `
+                <tr>
+                  <td>${letter}</td>
+                  <td>${counts[i]}</td>
+                  <td>${perc[i].toFixed(2)}</td>
+                  <td><div class="progress" style="height:10px;">
+                    <div class="progress-bar" style="width:${perc[i]}%; background:#203a43;"></div>
+                  </div></td>
+                </tr>`);
+            }
+          }
+        }
+
+        function renderCompare(plainCounts, cipherCounts) {
+          const total = plainCounts.reduce((a,b)=>a+b,0);
+          const plainPerc = toPerc(plainCounts, total);
+          const cipherPerc = toPerc(cipherCounts, total);
+          const guessed = guessShiftByAlignment(plainCounts, cipherCounts);
+          const alignedCounts = rotateCounts(cipherCounts, guessed);
+          const alignedPerc = toPerc(alignedCounts, total);
+          const tbody = document.getElementById("compareBody");
+          tbody.innerHTML = "";
+          for (let i = 0; i < 26; i++) {
+            const letter = String.fromCharCode(A + i);
+            tbody.insertAdjacentHTML("beforeend", `
+              <tr>
+                <td>${letter}</td>
+                <td>${plainPerc[i].toFixed(2)}</td>
+                <td>${cipherPerc[i].toFixed(2)}</td>
+                <td>${alignedPerc[i].toFixed(2)}</td>
+              </tr>`);
+          }
+          return guessed;
+        }
+
+        function analyze() {
+          const warn = document.getElementById("warn-msg");
+          warn.textContent = "";
+          const raw = document.getElementById("manualText").value.trim();
+          const shift = Math.max(0, Math.min(25, parseInt(document.getElementById("encShift").value, 10) || 0));
+          if (!raw) {
+            warn.textContent = "Please insert a text to proceed.";
+            document.getElementById("encrypted-text").textContent = "";
+            document.getElementById("decoded-text").textContent = "";
+            document.getElementById("guessed-shift").textContent = "";
+            document.getElementById("freqBody").innerHTML = "";
+            document.getElementById("compareBody").innerHTML = "";
+            return;
+          }
+
+          const text = normalizeText(raw);
+          const { counts: plainCounts, total } = countLetters(text);
+          if (total < 10) {
+            warn.textContent = "The text is too short for reliable estimation.";
+          }
+
+          renderPlainFreq(text);
+          const encrypted = caesarEncrypt(text, shift);
+          document.getElementById("encrypted-text").textContent = encrypted;
+          const { counts: cipherCounts } = countLetters(encrypted);
+          const guessed = guessShiftByAlignment(plainCounts, cipherCounts);
+          const decoded = caesarDecrypt(encrypted, guessed);
+          const usedGuessed = renderCompare(plainCounts, cipherCounts);
+          document.getElementById("decoded-text").textContent = decoded;
+          document.getElementById("guessed-shift").textContent = `Estimated shift: ${usedGuessed}`;
+        }
+
+        document.getElementById("analyzeBtn").addEventListener("click", analyze);
+      </script>
+    </section>
+
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
+    </div>
+  </footer>
+ù
+</body>
+</html>
