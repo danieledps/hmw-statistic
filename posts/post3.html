@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RSA Encryption with Frequency Analysis - Statistics Homework III</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-10 mx-auto">
+         <p class="text-muted mb-2">
+           <i class="bi bi-calendar3 me-1"></i>October 22, 2025
+         </p>
+         <h1 class="display-6 gradient-text mb-2">RSA Encryption and Frequency Analysis</h1>
+         <p class="lead mb-0">RSA with small primes and distribution-based decoding — Daniele De Pascali 1984462</p>
+       </div>
+     </div>
+   </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Introduction to RSA</h2>
+      <p>RSA is an asymmetric cryptosystem using a public key for encryption and a private key for decryption, built on modular exponentiation and the difficulty of factoring the modulus \( n = p \times q \).</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h3 class="h6 mb-3"><i class="bi bi-key-fill me-2"></i>Key Generation</h3>
+            <ol class="mb-0">
+              <li>Choose primes \( p, q \)</li>
+              <li>Compute \( n = p q \)</li>
+              <li>Compute \( \phi(n) = (p-1)(q-1) \)</li>
+              <li>Choose \( e \) with \( 1 < e < \phi(n) \) and \( \gcd(e,\phi(n))=1 \)</li>
+              <li>Compute \( d \equiv e^{-1} \pmod{\phi(n)} \)</li>
+            </ol>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h3 class="h6 mb-3"><i class="bi bi-shield-check me-2"></i>Core Equations</h3>
+            <p class="mb-2"><strong>Public Key:</strong> \( (e, n) \)</p>
+            <p class="mb-2"><strong>Private Key:</strong> \( (d, n) \)</p>
+            <p class="mb-2"><strong>Encryption:</strong> \( C = M^e \bmod n \)</p>
+            <p class="mb-0"><strong>Decryption:</strong> \( M = C^d \bmod n \)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>Security Warning:</strong> Encrypting single letters with textbook RSA is deterministic and leaks frequency information, enabling distribution-based attacks on messages that map each letter to a fixed ciphertext number.
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">RSA Parameters (Toy)</h2>
+      <p>For demonstration, we use small primes \( p=61 \), \( q=53 \), giving \( n=3233 \), \( \phi(n)=3120 \), with \( e=17 \) and \( d=2753 \) as a classic educational setup.</p>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="p-3 border rounded text-center">
+            <div class="text-muted small">Prime p</div>
+            <div class="fw-bold fs-4" id="display-p">61</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="p-3 border rounded text-center">
+            <div class="text-muted small">Prime q</div>
+            <div class="fw-bold fs-4" id="display-q">53</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="p-3 border rounded text-center">
+            <div class="text-muted small">Modulus n</div>
+            <div class="fw-bold fs-4" id="display-n">3233</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="p-3 border rounded text-center">
+            <div class="text-muted small">φ(n)</div>
+            <div class="fw-bold fs-4" id="display-phi">3120</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <div class="p-3 border rounded text-center bg-success text-white">
+            <div class="small">Public Exponent e</div>
+            <div class="fw-bold fs-4" id="display-e">17</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 border rounded text-center bg-danger text-white">
+            <div class="small">Private Exponent d</div>
+            <div class="fw-bold fs-4" id="display-d">2753</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-3 border rounded text-center bg-gradient-cyber text-white">
+            <div class="small">Max Message Value</div>
+            <div class="fw-bold fs-4">&lt; 3233</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 fw-bold mb-3">Interactive RSA & Frequency Analysis</h2>
+
+      <div class="p-4 border rounded mb-4 bg-light">
+        <label for="plaintext" class="form-label fw-semibold">Enter your message (A–Z only):</label>
+        <textarea class="form-control mb-3" id="plaintext" rows="3" placeholder="Type your message here...">THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG</textarea>
+        <button class="btn btn-dark" id="encryptBtn"><i class="bi bi-lock-fill me-2"></i>Encrypt with RSA</button>
+        <small id="error-msg" class="ms-2 text-danger"></small>
+      </div>
+
+      <div id="step1" class="mb-4" style="display:none;">
+        <h3 class="h5 mb-3"><i class="bi bi-1-circle-fill me-2"></i>Step 1: Letter → Number</h3>
+        <p>Mapping used: A=0, B=1, …, Z=25</p>
+        <div class="p-3 border rounded bg-light">
+          <p class="mb-1"><strong>Original Message:</strong> <span id="original-msg" class="text-primary"></span></p>
+          <p class="mb-0"><strong>Numeric Representation:</strong> <span id="numeric-msg" class="font-monospace"></span></p>
+        </div>
+      </div>
+
+      <div id="step2" class="mb-4" style="display:none;">
+        <h3 class="h5 mb-3"><i class="bi bi-2-circle-fill me-2"></i>Step 2: RSA Encryption</h3>
+        <p>For each letter \( M \), compute \( C = M^{17} \bmod 3233 \)</p>
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-1"><strong>Encrypted Numbers:</strong></p>
+          <p id="encrypted-numbers" class="font-monospace small mb-0" style="word-break: break-all;"></p>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered" id="encryption-table">
+            <thead class="table-light">
+              <tr>
+                <th>Letter</th>
+                <th>Plaintext (M)</th>
+                <th>Ciphertext (C)</th>
+                <th>Formula</th>
+              </tr>
+            </thead>
+            <tbody id="encryption-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="step3" class="mb-4" style="display:none;">
+        <h3 class="h5 mb-3"><i class="bi bi-3-circle-fill me-2"></i>Step 3: Plaintext Letter Frequency</h3>
+        <p>Frequency distribution of letters in the input message:</p>
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="table-responsive">
+              <table class="table table-striped table-sm">
+                <thead class="table-light">
+                  <tr>
+                    <th>Letter</th>
+                    <th>Count</th>
+                    <th>Frequency (%)</th>
+                    <th>Distribution</th>
+                  </tr>
+                </thead>
+                <tbody id="plaintext-freq-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="p-3 border rounded bg-light">
+              <h6 class="fw-semibold mb-3">Standard English Frequency</h6>
+              <div class="small">
+                <div class="mb-2">Most common: <span class="badge bg-primary">E (12.7%)</span></div>
+                <div class="mb-2">Second: <span class="badge bg-secondary">T (9.1%)</span></div>
+                <div class="mb-2">Third: <span class="badge bg-secondary">A (8.2%)</span></div>
+                <div class="mb-2">Fourth: <span class="badge bg-secondary">O (7.5%)</span></div>
+                <div>Fifth: <span class="badge bg-secondary">I (7.0%)</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="step4" class="mb-4" style="display:none;">
+        <h3 class="h5 mb-3"><i class="bi bi-4-circle-fill me-2"></i>Step 4: Ciphertext Frequency</h3>
+        <p>With textbook RSA on single letters, identical letters produce identical ciphertext numbers, preserving frequency patterns.</p>
+        <div class="table-responsive">
+          <table class="table table-striped table-sm">
+            <thead class="table-light">
+              <tr>
+                <th>Ciphertext Number</th>
+                <th>Frequency</th>
+                <th>Percentage</th>
+                <th>Distribution</th>
+              </tr>
+            </thead>
+            <tbody id="ciphertext-freq-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="step5" class="mb-4" style="display:none;">
+        <h3 class="h5 mb-3"><i class="bi bi-5-circle-fill me-2"></i>Step 5: Frequency-Based Decoding</h3>
+        <p>Algorithm: rank ciphertext numbers by frequency and map them to ranked English letters (E, T, A, O, I, N, …) to approximate decryption.</p>
+
+        <div class="p-3 border rounded bg-light mb-3">
+          <h6 class="fw-semibold mb-2">Procedure</h6>
+          <ol class="mb-0">
+            <li>Count unique ciphertext numbers</li>
+            <li>Sort by frequency (descending)</li>
+            <li>Sort letters by expected frequency (descending)</li>
+            <li>Map ranks: top ciphertext → ‘E’, next → ‘T’, etc.</li>
+            <li>Apply mapping to reconstruct the message</li>
+          </ol>
+        </div>
+
+        <div class="table-responsive mb-3">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Rank</th>
+                <th>Ciphertext Number</th>
+                <th>Frequency</th>
+                <th>→</th>
+                <th>Guessed Letter</th>
+                <th>Expected Freq</th>
+              </tr>
+            </thead>
+            <tbody id="mapping-tbody"></tbody>
+          </table>
+        </div>
+
+        <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+          <p class="mb-1"><strong>Decrypted Message:</strong></p>
+          <p id="decrypted-msg" class="fs-5 fw-bold text-success mb-2"></p>
+          <p class="mb-0 small text-muted"><strong>Original Message:</strong> <span id="compare-original"></span></p>
+          <p id="accuracy-msg" class="mb-0 mt-2"></p>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">RSA vs Caesar Cipher</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Feature</th>
+              <th>Caesar Cipher</th>
+              <th>RSA (Per-Letter, No Padding)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Type</strong></td>
+              <td>Symmetric</td>
+              <td>Asymmetric</td>
+            </tr>
+            <tr>
+              <td><strong>Key Space</strong></td>
+              <td>26 shifts</td>
+              <td>Large (depends on \( \phi(n) \))</td>
+            </tr>
+            <tr>
+              <td><strong>Deterministic?</strong></td>
+              <td>Yes</td>
+              <td>Yes (without padding)</td>
+            </tr>
+            <tr>
+              <td><strong>Frequency Attack</strong></td>
+              <td>Effective</td>
+              <td>Effective on per-letter usage</td>
+            </tr>
+            <tr>
+              <td><strong>Best Practice</strong></td>
+              <td>Educational only</td>
+              <td>Use padding (e.g., OAEP) and block/hybrid encryption</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mb-4">
+      <h2 class="h4 mb-3">Conclusion</h2>
+      <div class="p-4 border rounded bg-light">
+        <p class="mb-3">This demo shows that textbook RSA used as a monoalphabetic substitution over letters leaks frequency, so distribution-based matching can recover meaningful plaintext structure.</p>
+        <ul class="mb-3">
+          <li><strong>Determinism:</strong> same letter → same ciphertext number</li>
+          <li><strong>No randomization:</strong> padding like OAEP is essential in practice</li>
+          <li><strong>Pattern leakage:</strong> rank mapping mirrors language statistics</li>
+        </ul>
+        <p class="mb-0"><strong>Takeaway:</strong> Proper RSA uses padding and hybrid schemes to prevent frequency attacks and ensure semantic security in real-world applications.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">© 2025 Statistics Blog - Daniele De Pascali</p>
+    </div>
+  </footer>
+
+  <script>
+    // RSA parameters (toy)
+    const RSA_P = 61;
+    const RSA_Q = 53;
+    const RSA_N = RSA_P * RSA_Q;  // 3233
+    const RSA_PHI = (RSA_P - 1) * (RSA_Q - 1);  // 3120
+    const RSA_E = 17;
+    const RSA_D = 2753;  // 17 * 2753 ≡ 1 (mod 3120)
+
+    // English frequency order (approx.)
+    const ENGLISH_FREQ_ORDER = [
+      'E','T','A','O','I','N','S','H','R','D','L','C','U','M','W','F','G','Y','P','B','V','K','J','X','Q','Z'
+    ];
+
+    // Populate displayed params
+    document.getElementById('display-p').textContent = RSA_P;
+    document.getElementById('display-q').textContent = RSA_Q;
+    document.getElementById('display-n').textContent = RSA_N;
+    document.getElementById('display-phi').textContent = RSA_PHI;
+    document.getElementById('display-e').textContent = RSA_E;
+    document.getElementById('display-d').textContent = RSA_D;
+
+    // Fast modular exponentiation
+    function modPow(base, exp, mod) {
+      if (mod === 1) return 0;
+      let result = 1;
+      base = base % mod;
+      while (exp > 0) {
+        if (exp & 1) result = (result * base) % mod;
+        exp >>= 1;
+        base = (base * base) % mod;
+      }
+      return result;
+    }
+
+    function rsaEncrypt(m) { return modPow(m, RSA_E, RSA_N); }
+    function rsaDecrypt(c) { return modPow(c, RSA_D, RSA_N); }
+
+    function letterToNum(ch) { return ch.toUpperCase().charCodeAt(0) - 65; }
+    function numToLetter(n) { return String.fromCharCode(n + 65); }
+    function cleanText(t) { return t.toUpperCase().replace(/[^A-Z]/g, ''); }
+
+    function performEncryption() {
+      const errorMsg = document.getElementById('error-msg');
+      errorMsg.textContent = '';
+
+      const raw = document.getElementById('plaintext').value;
+      const cleaned = cleanText(raw);
+      if (!cleaned.length) {
+        errorMsg.textContent = 'Please enter a valid message with letters A-Z.';
+        return;
+      }
+
+      // Hide all steps
+      for (let i = 1; i <= 5; i++) document.getElementById('step' + i).style.display = 'none';
+
+      // Step 1 — mapping
+      const nums = [];
+      const ciphers = [];
+      for (let i = 0; i < cleaned.length; i++) {
+        const m = letterToNum(cleaned[i]);
+        nums.push(m);
+        ciphers.push(rsaEncrypt(m));
+      }
+      document.getElementById('original-msg').textContent = cleaned;
+      document.getElementById('numeric-msg').textContent = nums.join(', ');
+      document.getElementById('step1').style.display = 'block';
+
+      // Step 2 — encryption table
+      document.getElementById('encrypted-numbers').textContent = ciphers.join(', ');
+      const encTbody = document.getElementById('encryption-tbody');
+      encTbody.innerHTML = '';
+      const show = Math.min(10, cleaned.length);
+      for (let i = 0; i < show; i++) {
+        const row = encTbody.insertRow();
+        row.innerHTML = `
+          <td class="text-center"><strong>${cleaned[i]}</strong></td>
+          <td class="text-center">${nums[i]}</td>
+          <td class="text-center">${ciphers[i]}</td>
+          <td class="font-monospace small">${nums[i]}<sup>17</sup> mod 3233 = ${ciphers[i]}</td>
+        `;
+      }
+      if (cleaned.length > 10) {
+        const row = encTbody.insertRow();
+        row.innerHTML = `<td colspan="4" class="text-center text-muted">... (showing first 10 of ${cleaned.length} letters)</td>`;
+      }
+      document.getElementById('step2').style.display = 'block';
+
+      // Step 3 — plaintext frequency
+      const pFreq = {};
+      for (const ch of cleaned) pFreq[ch] = (pFreq[ch] || 0) + 1;
+      const pSorted = Object.entries(pFreq).sort((a,b)=>b[1]-a[1]);
+      const pTbody = document.getElementById('plaintext-freq-tbody');
+      pTbody.innerHTML = '';
+      for (const [ch, count] of pSorted) {
+        const pct = (100 * count / cleaned.length).toFixed(2);
+        const row = pTbody.insertRow();
+        row.innerHTML = `
+          <td class="text-center"><strong>${ch}</strong></td>
+          <td class="text-center">${count}</td>
+          <td class="text-center">${pct}%</td>
+          <td>
+            <div class="progress" style="height:10px;">
+              <div class="progress-bar" style="width:${Math.min(100, pct * 5)}%; background:#203a43;"></div>
+            </div>
+          </td>
+        `;
+      }
+      document.getElementById('step3').style.display = 'block';
+
+      // Step 4 — ciphertext frequency
+      const cFreq = {};
+      for (const c of ciphers) cFreq[c] = (cFreq[c] || 0) + 1;
+      const cSorted = Object.entries(cFreq).sort((a,b)=>b[1]-a[1]);
+      const cTbody = document.getElementById('ciphertext-freq-tbody');
+      cTbody.innerHTML = '';
+      for (const [c, count] of cSorted.slice(0, 15)) {
+        const pct = (100 * count / cleaned.length).toFixed(2);
+        const row = cTbody.insertRow();
+        row.innerHTML = `
+          <td class="text-center font-monospace">${c}</td>
+          <td class="text-center">${count}</td>
+          <td class="text-center">${pct}%</td>
+          <td>
+            <div class="progress" style="height:10px;">
+              <div class="progress-bar bg-danger" style="width:${Math.min(100, pct * 5)}%;"></div>
+            </div>
+          </td>
+        `;
+      }
+      document.getElementById('step4').style.display = 'block';
+
+      // Step 5 — frequency-based mapping
+      const mapping = {};
+      for (let i = 0; i < cSorted.length; i++) {
+        const cipherNum = cSorted[i][0];
+        mapping[cipherNum] = ENGLISH_FREQ_ORDER[i] || '?';
+      }
+
+      const mTbody = document.getElementById('mapping-tbody');
+      mTbody.innerHTML = '';
+      const englishFreqs = [12.7, 9.1, 8.2, 7.5, 7.0, 6.7, 6.3, 6.1, 6.0, 4.3, 4.0, 2.8, 2.8, 2.4, 2.4, 2.2, 2.0, 2.0, 1.9, 1.5, 1.0, 0.8, 0.2, 0.2, 0.1, 0.1];
+      for (let i = 0; i < Math.min(10, cSorted.length); i++) {
+        const [cipherNum, count] = cSorted[i];
+        const pct = (100 * count / cleaned.length).toFixed(2);
+        const row = mTbody.insertRow();
+        row.innerHTML = `
+          <td class="text-center">${i + 1}</td>
+          <td class="text-center font-monospace">${cipherNum}</td>
+          <td class="text-center">${count} (${pct}%)</td>
+          <td class="text-center">→</td>
+          <td class="text-center"><strong class="text-success">${mapping[cipherNum]}</strong></td>
+          <td class="text-center">${englishFreqs[i] ?? '—'}%</td>
+        `;
+      }
+
+      // Apply mapping to decrypt
+      let guessed = '';
+      for (const c of ciphers) guessed += mapping[c] || '?';
+      document.getElementById('decrypted-msg').textContent = guessed;
+      document.getElementById('compare-original').textContent = cleaned;
+
+      // Accuracy estimate (only exact letter matches)
+      let correct = 0;
+      for (let i = 0; i < cleaned.length; i++) if (guessed[i] === cleaned[i]) correct++;
+      const acc = (100 * correct / cleaned.length).toFixed(1);
+      const accMsg = document.getElementById('accuracy-msg');
+      if (Number(acc) === 100) {
+        accMsg.innerHTML = '<span class="badge bg-success fs-6"><i class="bi bi-check-circle-fill me-2"></i>Perfect match! Frequency analysis decoded the message with 100% accuracy.</span>';
+      } else {
+        accMsg.innerHTML = `<span class="badge bg-warning text-dark fs-6"><i class="bi bi-info-circle-fill me-2"></i>Accuracy: ${acc}% (${correct}/${cleaned.length}). Longer texts usually improve results.</span>`;
+      }
+
+      document.getElementById('step5').style.display = 'block';
+      document.getElementById('step1').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    document.getElementById('encryptBtn').addEventListener('click', performEncryption);
+    window.addEventListener('load', () => setTimeout(performEncryption, 400));
+  </script>
+
+</body>
+</html>
