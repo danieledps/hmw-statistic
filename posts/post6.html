@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Online Algorithms for Mean and Variance - Statistics Homework VI</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-10 mx-auto">
+         <p class="text-muted mb-2">
+           <i class="bi bi-calendar3 me-1"></i>November 5, 2025
+         </p>
+         <h1 class="display-6 gradient-text mb-2">Online Algorithms for Mean and Variance</h1>
+         <p class="lead mb-0">Recurrence Relationships, Welford's Algorithm, and Numerical Stability — Daniele De Pascali 1984462</p>
+       </div>
+     </div>
+   </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Introduction</h2>
+      <p>Computing statistical measures like mean and variance is fundamental in data analysis. Traditional batch algorithms require storing all data in memory and processing it in two passes, which becomes impractical for streaming data or large datasets. Online algorithms solve this by updating statistics incrementally as each new value arrives, using only constant memory.</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h3 class="h6 mb-3"><i class="bi bi-archive-fill me-2"></i>Batch Algorithms</h3>
+            <ul class="mb-2">
+              <li><strong>Memory:</strong> \( O(n) \) — stores all data points</li>
+              <li><strong>Passes:</strong> Two passes over data</li>
+              <li><strong>Update:</strong> Complete recalculation needed</li>
+              <li><strong>Stability:</strong> Prone to catastrophic cancellation</li>
+            </ul>
+            <p class="mb-0 small text-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>Not suitable for streaming data</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post" style="background-color: #e8f5e9;">
+            <h3 class="h6 mb-3"><i class="bi bi-arrow-repeat me-2"></i>Online Algorithms</h3>
+            <ul class="mb-2">
+              <li><strong>Memory:</strong> \( O(1) \) — constant space</li>
+              <li><strong>Passes:</strong> Single pass through data</li>
+              <li><strong>Update:</strong> Incremental with each new value</li>
+              <li><strong>Stability:</strong> Numerically stable</li>
+            </ul>
+            <p class="mb-0 small text-success"><i class="bi bi-check-circle-fill me-1"></i>Ideal for streaming and big data</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Key Insight:</strong> Welford's online algorithm (1962) computes running mean and variance with superior numerical stability, avoiding catastrophic cancellation that plagues naive batch methods.
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Recurrence Relationship for Mean</h2>
+      
+      <div class="p-4 border rounded bg-light mb-4">
+        <h3 class="h5 fw-bold mb-3">Theorem: Incremental Mean Update</h3>
+        <p class="mb-3">Given \( n-1 \) observations with mean \( \bar{x}_{n-1} \), when a new observation \( x_n \) arrives, the updated mean \( \bar{x}_n \) can be computed as:</p>
+        <div class="p-3 border rounded mb-3" style="background-color: white;">
+          \[ \bar{x}_n = \bar{x}_{n-1} + \frac{x_n - \bar{x}_{n-1}}{n} \]
+        </div>
+        
+        <h3 class="h6 fw-semibold mb-2">Proof:</h3>
+        <p class="mb-2">By definition, the mean of \( n \) observations is:</p>
+        <p class="mb-2">\[ \bar{x}_n = \frac{1}{n} \sum_{i=1}^{n} x_i = \frac{1}{n} \left( \sum_{i=1}^{n-1} x_i + x_n \right) \]</p>
+        
+        <p class="mb-2">We can express the sum of the first \( n-1 \) observations in terms of their mean:</p>
+        <p class="mb-2">\[ \sum_{i=1}^{n-1} x_i = (n-1) \bar{x}_{n-1} \]</p>
+        
+        <p class="mb-2">Substituting this into the equation for \( \bar{x}_n \):</p>
+        <p class="mb-2">\[ \bar{x}_n = \frac{1}{n} \left( (n-1) \bar{x}_{n-1} + x_n \right) \]</p>
+        
+        <p class="mb-2">Expanding:</p>
+        <p class="mb-2">\[ \bar{x}_n = \frac{n-1}{n} \bar{x}_{n-1} + \frac{x_n}{n} \]</p>
+        
+        <p class="mb-2">Rewriting \( \frac{n-1}{n} = 1 - \frac{1}{n} \):</p>
+        <p class="mb-2">\[ \bar{x}_n = \left(1 - \frac{1}{n}\right) \bar{x}_{n-1} + \frac{x_n}{n} = \bar{x}_{n-1} - \frac{\bar{x}_{n-1}}{n} + \frac{x_n}{n} \]</p>
+        
+        <p class="mb-2">Factoring out \( \frac{1}{n} \):</p>
+        <p class="mb-0">\[ \bar{x}_n = \bar{x}_{n-1} + \frac{x_n - \bar{x}_{n-1}}{n} \quad \blacksquare \]</p>
+      </div>
+
+      <div class="alert alert-success" role="alert">
+        <i class="bi bi-lightbulb-fill me-2"></i>
+        <strong>Interpretation:</strong> The new mean equals the old mean plus a correction term proportional to the difference between the new value and the old mean, scaled by \( 1/n \).
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Recurrence Relationship for Variance</h2>
+      
+      <div class="p-4 border rounded bg-light mb-4">
+        <h3 class="h5 fw-bold mb-3">Theorem: Incremental Variance Update (Welford's Algorithm)</h3>
+        <p class="mb-3">Define \( M_{2,n} = \sum_{i=1}^{n} (x_i - \bar{x}_n)^2 \) as the sum of squared deviations. Then:</p>
+        
+        <div class="p-3 border rounded mb-3" style="background-color: white;">
+          \[ M_{2,n} = M_{2,n-1} + (x_n - \bar{x}_{n-1})(x_n - \bar{x}_n) \]
+        </div>
+        
+        <p class="mb-0">The sample variance is then: \( s_n^2 = \frac{M_{2,n}}{n-1} \)</p>
+      </div>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h3 class="h6 fw-semibold mb-2">Proof:</h3>
+        <p class="mb-2">Starting with the definition of \( M_{2,n} \):</p>
+        <p class="mb-2">\[ M_{2,n} = \sum_{i=1}^{n} (x_i - \bar{x}_n)^2 = \sum_{i=1}^{n-1} (x_i - \bar{x}_n)^2 + (x_n - \bar{x}_n)^2 \]</p>
+        
+        <p class="mb-2">For the first \( n-1 \) terms, we add and subtract \( \bar{x}_{n-1} \):</p>
+        <p class="mb-2">\[ (x_i - \bar{x}_n)^2 = \left[(x_i - \bar{x}_{n-1}) + (\bar{x}_{n-1} - \bar{x}_n)\right]^2 \]</p>
+        
+        <p class="mb-2">Expanding:</p>
+        <p class="mb-2">\[ = (x_i - \bar{x}_{n-1})^2 + 2(x_i - \bar{x}_{n-1})(\bar{x}_{n-1} - \bar{x}_n) + (\bar{x}_{n-1} - \bar{x}_n)^2 \]</p>
+        
+        <p class="mb-2">Summing over \( i = 1, \ldots, n-1 \):</p>
+        <p class="mb-2">\[ \sum_{i=1}^{n-1} (x_i - \bar{x}_n)^2 = M_{2,n-1} + 2(\bar{x}_{n-1} - \bar{x}_n)\sum_{i=1}^{n-1}(x_i - \bar{x}_{n-1}) + (n-1)(\bar{x}_{n-1} - \bar{x}_n)^2 \]</p>
+        
+        <p class="mb-2">Note that \( \sum_{i=1}^{n-1}(x_i - \bar{x}_{n-1}) = 0 \) by definition of the mean, so:</p>
+        <p class="mb-2">\[ \sum_{i=1}^{n-1} (x_i - \bar{x}_n)^2 = M_{2,n-1} + (n-1)(\bar{x}_{n-1} - \bar{x}_n)^2 \]</p>
+        
+        <p class="mb-2">From the mean recurrence, we have \( \bar{x}_n - \bar{x}_{n-1} = \frac{x_n - \bar{x}_{n-1}}{n} \), so:</p>
+        <p class="mb-2">\[ (\bar{x}_{n-1} - \bar{x}_n)^2 = \frac{(x_n - \bar{x}_{n-1})^2}{n^2} \]</p>
+        
+        <p class="mb-2">Also, \[ (x_n - \bar{x}_n)^2 = \left(x_n - \bar{x}_{n-1} - \frac{x_n - \bar{x}_{n-1}}{n}\right)^2 = \left(\frac{n-1}{n}(x_n - \bar{x}_{n-1})\right)^2 = \frac{(n-1)^2}{n^2}(x_n - \bar{x}_{n-1})^2 \]</p>
+
+        <p class="mb-2">Combining all terms:</p>
+        <p class="mb-2">\[ M_{2,n} = M_{2,n-1} + (n-1)\frac{(x_n - \bar{x}_{n-1})^2}{n^2} + \frac{(n-1)^2}{n^2}(x_n - \bar{x}_{n-1})^2 \]</p>
+        
+        <p class="mb-2">\[ = M_{2,n-1} + (x_n - \bar{x}_{n-1})^2 \left[\frac{n-1}{n^2} + \frac{(n-1)^2}{n^2}\right] \]</p>
+        
+        <p class="mb-2">\[ = M_{2,n-1} + (x_n - \bar{x}_{n-1})^2 \frac{(n-1)(1 + n - 1)}{n^2} = M_{2,n-1} + (x_n - \bar{x}_{n-1})^2 \frac{n(n-1)}{n^2} \]</p>
+        
+        <p class="mb-2">\[ = M_{2,n-1} + \frac{(n-1)}{n}(x_n - \bar{x}_{n-1})^2 \]</p>
+        
+        <p class="mb-2">This can be rewritten as:</p>
+        <p class="mb-0">\[ M_{2,n} = M_{2,n-1} + (x_n - \bar{x}_{n-1})(x_n - \bar{x}_n) \quad \blacksquare \]</p>
+      </div>
+
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
+        <strong>Critical Detail:</strong> Notice the algorithm uses both \( \bar{x}_{n-1} \) (old mean) and \( \bar{x}_n \) (new mean) in the update formula, which is key to numerical stability.
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Numerical Stability Issues</h2>
+      
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"></i>Catastrophic Cancellation</h3>
+        <p>The naive batch formula for variance suffers from catastrophic cancellation when computing the difference of two large, nearly equal numbers:</p>
+        
+        <div class="p-3 border rounded mb-3" style="background-color: #ffebee;">
+          <p class="mb-2"><strong>Naive Formula (Unstable):</strong></p>
+          \[ \text{Var} = \frac{\sum x_i^2}{n} - \left(\frac{\sum x_i}{n}\right)^2 \]
+          <p class="mb-0 small text-danger mt-2"><i class="bi bi-x-circle-fill me-1"></i>Problem: When values are large, \( \sum x_i^2 \) and \( (\sum x_i)^2/n \) are both very large and nearly equal, leading to precision loss.</p>
+        </div>
+
+        <div class="p-4 border rounded bg-light">
+          <h3 class="h6 fw-semibold mb-2">Example of Catastrophic Cancellation</h3>
+          <p class="mb-2">Consider the dataset: \( [10^9 + 4, 10^9 + 7, 10^9 + 13, 10^9 + 16] \)</p>
+          <ul class="mb-2">
+            <li><strong>True variance:</strong> 30.0</li>
+            <li><strong>Naive algorithm result:</strong> -170.67 (negative variance!)</li>
+            <li><strong>Welford's algorithm result:</strong> 30.0 (correct)</li>
+          </ul>
+          <p class="mb-0 small">The naive method fails because subtraction of similar large numbers amplifies rounding errors in floating-point arithmetic.</p>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"></i>Overflow Management</h3>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2">Batch Algorithm Risk</h6>
+              <p class="small mb-2">Computing \( \sum x_i^2 \) can overflow for large values even if the final variance is small:</p>
+              <ul class="small mb-0">
+                <li>Accumulates squared values</li>
+                <li>Maximum value proportional to \( n \cdot \max(x_i^2) \)</li>
+                <li>Overflow occurs before final division</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2">Online Algorithm Protection</h6>
+              <p class="small mb-2">Welford's method avoids overflow by working with deviations from mean:</p>
+              <ul class="small mb-0">
+                <li>Accumulates differences \( (x_i - \bar{x}) \)</li>
+                <li>Values remain bounded relative to data spread</li>
+                <li>No intermediate overflow risk</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"></i>Error Propagation</h3>
+        <p>Online algorithms control error propagation better than batch methods:</p>
+        
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Aspect</th>
+                <th>Batch Algorithm</th>
+                <th>Welford's Online Algorithm</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Roundoff Error</strong></td>
+                <td class="text-danger">Accumulates in sums \( \sum x_i \) and \( \sum x_i^2 \)</td>
+                <td class="text-success">Errors bounded by variance magnitude</td>
+              </tr>
+              <tr>
+                <td><strong>Cancellation</strong></td>
+                <td class="text-danger">Catastrophic in final subtraction</td>
+                <td class="text-success">No large subtractions performed</td>
+              </tr>
+              <tr>
+                <td><strong>Stability</strong></td>
+                <td class="text-danger">Condition number \( O(n) \)</td>
+                <td class="text-success">Well-conditioned updates</td>
+              </tr>
+              <tr>
+                <td><strong>Relative Error</strong></td>
+                <td class="text-danger">Grows with \( n \) and data magnitude</td>
+                <td class="text-success">Independent of data magnitude</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 fw-bold mb-3">Interactive Algorithm Comparison</h2>
+
+      <div class="p-4 border rounded mb-4 bg-light">
+        <h3 class="h6 mb-3">Test Configuration</h3>
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="dataSize" class="form-label fw-semibold">Number of Values:</label>
+            <input type="number" class="form-control" id="dataSize" value="1000" min="10" max="100000">
+          </div>
+          <div class="col-md-6">
+            <label for="dataOffset" class="form-label fw-semibold">Data Offset (test stability):</label>
+            <input type="number" class="form-control" id="dataOffset" value="1000000000" min="0" max="1000000000" step="1000000">
+          </div>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label for="dataSpread" class="form-label fw-semibold">Data Spread (std dev):</label>
+            <input type="number" class="form-control" id="dataSpread" value="10" min="1" max="1000">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Algorithm Mode:</label>
+            <select class="form-select" id="streamMode">
+              <option value="false">All at once</option>
+              <option value="true">Streaming</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-dark" id="runBtn"><i class="bi bi-play-fill me-2"></i>Run Algorithms</button>
+        <button class="btn btn-secondary" id="stopBtn" style="display:none;"><i class="bi bi-stop-fill me-2"></i>Stop</button>
+        <small id="status-msg" class="ms-2 text-muted"></small>
+      </div>
+
+      <div id="results" style="display:none;">
+        <div class="row g-4 mb-4">
+          <div class="col-lg-4">
+            <div class="p-4 border rounded" style="background-color: #e3f2fd;">
+              <h3 class="h6 mb-3"><i class="bi bi-check-circle-fill me-2"></i>True Values</h3>
+              <div class="mb-2">
+                <strong>Mean:</strong> <span id="true-mean" class="d-block fs-5 text-primary font-monospace"></span>
+              </div>
+              <div class="mb-0">
+                <strong>Variance:</strong> <span id="true-var" class="d-block fs-5 text-primary font-monospace"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="p-4 border rounded" style="background-color: #ffebee;">
+              <h3 class="h6 mb-3"><i class="bi bi-x-circle-fill me-2"></i>Naive Batch</h3>
+              <div class="mb-2">
+                <strong>Mean:</strong> <span id="naive-mean" class="d-block fs-5 font-monospace"></span>
+              </div>
+              <div class="mb-2">
+                <strong>Variance:</strong> <span id="naive-var" class="d-block fs-5 font-monospace"></span>
+              </div>
+              <div>
+                <strong>Error:</strong> <span id="naive-error" class="badge"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="p-4 border rounded" style="background-color: #e8f5e9;">
+              <h3 class="h6 mb-3"><i class="bi bi-award-fill me-2"></i>Welford Online</h3>
+              <div class="mb-2">
+                <strong>Mean:</strong> <span id="welford-mean" class="d-block fs-5 font-monospace"></span>
+              </div>
+              <div class="mb-2">
+                <strong>Variance:</strong> <span id="welford-var" class="d-block fs-5 font-monospace"></span>
+              </div>
+              <div>
+                <strong>Error:</strong> <span id="welford-error" class="badge"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="streaming-display" style="display:none;" class="mb-4">
+          <div class="p-4 border rounded bg-light">
+            <h3 class="h6 mb-3">Streaming Progress</h3>
+            <div class="progress mb-2" style="height: 25px;">
+              <div id="progress-bar" class="progress-bar bg-gradient-cyber" role="progressbar" style="width: 0%">0%</div>
+            </div>
+            <p class="mb-0 small">Processing: <span id="current-n">0</span> / <span id="total-n">0</span> values</p>
+          </div>
+        </div>
+
+        <div class="p-4 border rounded bg-light">
+          <h3 class="h6 mb-3">Algorithm Comparison</h3>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Metric</th>
+                  <th>Naive Batch</th>
+                  <th>Welford Online</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Mean Absolute Error</strong></td>
+                  <td id="naive-mean-error"></td>
+                  <td id="welford-mean-error"></td>
+                </tr>
+                <tr>
+                  <td><strong>Variance Absolute Error</strong></td>
+                  <td id="naive-var-error"></td>
+                  <td id="welford-var-error"></td>
+                </tr>
+                <tr>
+                  <td><strong>Memory Usage</strong></td>
+                  <td id="naive-memory"></td>
+                  <td id="welford-memory"></td>
+                </tr>
+                <tr>
+                  <td><strong>Execution Time</strong></td>
+                  <td id="naive-time"></td>
+                  <td id="welford-time"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Algorithm Pseudocode</h2>
+      
+      <div class="row g-4">
+        <div class="col-lg-6">
+          <div class="p-4 border rounded bg-light">
+            <h3 class="h6 mb-3">Naive Batch Algorithm</h3>
+            <pre class="mb-0" style="background-color: white; padding: 15px; border-radius: 5px; font-size: 0.85em;"><code>function naiveBatchVariance(data[]):
+    n = length(data)
+    sum = 0
+    sumSq = 0
+    
+    // First pass: accumulate sums
+    for i = 1 to n:
+        sum = sum + data[i]
+        sumSq = sumSq + data[i] * data[i]
+    
+    mean = sum / n
+    variance = (sumSq - sum * sum / n) / (n - 1)
+    
+    return (mean, variance)</code></pre>
+            <p class="mb-0 mt-2 small text-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>Catastrophic cancellation in variance calculation</p>
+          </div>
+        </div>
+        
+        <div class="col-lg-6">
+          <div class="p-4 border rounded" style="background-color: #e8f5e9;">
+            <h3 class="h6 mb-3">Welford's Online Algorithm</h3>
+            <pre class="mb-0" style="background-color: white; padding: 15px; border-radius: 5px; font-size: 0.85em;"><code>function welfordOnlineVariance(data[]):
+    n = 0
+    mean = 0
+    M2 = 0
+    
+    // Single pass: update incrementally
+    for each x in data:
+        n = n + 1
+        delta = x - mean
+        mean = mean + delta / n
+        delta2 = x - mean
+        M2 = M2 + delta * delta2
+    
+    variance = M2 / (n - 1)
+    
+    return (mean, variance)</code></pre>
+            <p class="mb-0 mt-2 small text-success"><i class="bi bi-check-circle-fill me-1"></i>Numerically stable, no catastrophic cancellation</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Computational Advantages</h2>
+      
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post">
+            <h3 class="h6 mb-3"><i class="bi bi-speedometer2 me-2"></i>Computational Efficiency</h3>
+            <ul class="mb-0">
+              <li><strong>Time Complexity:</strong> \( O(n) \) single pass vs. \( O(n) \) two-pass (constant factor improvement)</li>
+              <li><strong>Space Complexity:</strong> \( O(1) \) vs. \( O(n) \) (crucial for big data)</li>
+              <li><strong>Cache Performance:</strong> Better locality, fewer memory accesses</li>
+              <li><strong>Parallelization:</strong> Can be extended to parallel/distributed computing</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post">
+            <h3 class="h6 mb-3"><i class="bi bi-shield-check me-2"></i>Robustness & Scalability</h3>
+            <ul class="mb-0">
+              <li><strong>Streaming Data:</strong> Processes data as it arrives without storage</li>
+              <li><strong>Real-time Analytics:</strong> Continuous statistics updates</li>
+              <li><strong>Large Datasets:</strong> Handles datasets too large for memory</li>
+              <li><strong>Numerical Stability:</strong> Maintains accuracy across data ranges</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    let stopRequested = false;
+
+    function generateData(n, offset, spread) {
+      const data = [];
+      for (let i = 0; i < n; i++) {
+        const u1 = Math.random();
+        const u2 = Math.random();
+        const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+        data.push(offset + z * spread);
+      }
+      return data;
+    }
+
+    function naiveBatch(data) {
+      const start = performance.now();
+      let sum = 0;
+      let sumSq = 0;
+      const n = data.length;
+      
+      for (let i = 0; i < n; i++) {
+        sum += data[i];
+        sumSq += data[i] * data[i];
+      }
+      
+      const mean = sum / n;
+      const variance = (sumSq - sum * sum / n) / (n - 1);
+      const time = performance.now() - start;
+      
+      return { mean, variance, time, memory: n * 8 };
+    }
+
+    function welfordOnline(data) {
+      const start = performance.now();
+      let n = 0;
+      let mean = 0;
+      let M2 = 0;
+      
+      for (const x of data) {
+        n++;
+        const delta = x - mean;
+        mean += delta / n;
+        const delta2 = x - mean;
+        M2 += delta * delta2;
+      }
+      
+      const variance = M2 / (n - 1);
+      const time = performance.now() - start;
+      
+      return { mean, variance, time, memory: 24 };
+    }
+
+    async function welfordStreaming(data, updateCallback) {
+      let n = 0;
+      let mean = 0;
+      let M2 = 0;
+      
+      for (let i = 0; i < data.length; i++) {
+        if (stopRequested) break;
+        
+        const x = data[i];
+        n++;
+        const delta = x - mean;
+        mean += delta / n;
+        const delta2 = x - mean;
+        M2 += delta * delta2;
+        
+        if (i % Math.floor(data.length / 100) === 0 || i === data.length - 1) {
+          const variance = n > 1 ? M2 / (n - 1) : 0;
+          updateCallback(n, mean, variance);
+          await new Promise(resolve => setTimeout(resolve, 10));
+        }
+      }
+      
+      const variance = M2 / (n - 1);
+      return { mean, variance, memory: 24 };
+    }
+
+    function trueStats(data) {
+      const n = data.length;
+      const mean = data.reduce((a, b) => a + b, 0) / n;
+      const variance = data.reduce((acc, x) => acc + (x - mean) ** 2, 0) / (n - 1);
+      return { mean, variance };
+    }
+
+    async function runComparison() {
+      stopRequested = false;
+      document.getElementById('runBtn').style.display = 'none';
+      document.getElementById('stopBtn').style.display = 'inline-block';
+      document.getElementById('status-msg').textContent = 'Generating data...';
+      
+      const n = parseInt(document.getElementById('dataSize').value);
+      const offset = parseFloat(document.getElementById('dataOffset').value);
+      const spread = parseFloat(document.getElementById('dataSpread').value);
+      const streaming = document.getElementById('streamMode').value === 'true';
+      
+      const data = generateData(n, offset, spread);
+
+      document.getElementById('status-msg').textContent = 'Computing true statistics...';
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const truth = trueStats(data);
+      
+      document.getElementById('true-mean').textContent = truth.mean.toFixed(10);
+      document.getElementById('true-var').textContent = truth.variance.toFixed(10);
+
+      document.getElementById('status-msg').textContent = 'Running naive batch algorithm...';
+      await new Promise(resolve => setTimeout(resolve, 100));
+      const naive = naiveBatch(data);
+      
+      document.getElementById('naive-mean').textContent = naive.mean.toFixed(10);
+      document.getElementById('naive-var').textContent = naive.variance.toFixed(10);
+      
+
+    const naiveMeanErr = Math.abs(naive.mean - truth.mean);
+    const naiveVarErr = Math.abs(naive.variance - truth.variance);
+    const naiveRelErr = Math.abs(naiveVarErr / truth.variance * 100);
+
+    let naiveErrDisplay;
+    if (naiveRelErr < 0.01) {
+    naiveErrDisplay = naiveRelErr.toFixed(6) + '%';
+    } else if (naiveRelErr < 1) {
+    naiveErrDisplay = naiveRelErr.toFixed(4) + '%';
+    } else {
+    naiveErrDisplay = naiveRelErr.toFixed(2) + '%';
+    }
+
+    document.getElementById('naive-error').textContent = naiveErrDisplay;
+    document.getElementById('naive-error').className = naiveRelErr > 1 ? 'badge bg-danger' : naiveRelErr > 0.01 ? 'badge bg-warning' : 'badge bg-success';
+
+    document.getElementById('naive-mean-error').textContent = naiveMeanErr.toExponential(6);
+    document.getElementById('naive-var-error').textContent = naiveVarErr.toExponential(6);
+    document.getElementById('naive-memory').textContent = (naive.memory / 1024).toFixed(2) + ' KB';
+    document.getElementById('naive-time').textContent = naive.time.toFixed(3) + ' ms';
+
+      let welford;
+      if (streaming) {
+        document.getElementById('streaming-display').style.display = 'block';
+        document.getElementById('total-n').textContent = n;
+        document.getElementById('status-msg').textContent = 'Running Welford streaming...';
+        
+        welford = await welfordStreaming(data, (currentN, mean, variance) => {
+          document.getElementById('current-n').textContent = currentN;
+          const progress = (currentN / n * 100).toFixed(1);
+          document.getElementById('progress-bar').style.width = progress + '%';
+          document.getElementById('progress-bar').textContent = progress + '%';
+          document.getElementById('welford-mean').textContent = mean.toFixed(10);
+          document.getElementById('welford-var').textContent = variance.toFixed(10);
+        });
+      } else {
+        document.getElementById('streaming-display').style.display = 'none';
+        document.getElementById('status-msg').textContent = 'Running Welford online algorithm...';
+        await new Promise(resolve => setTimeout(resolve, 100));
+        welford = welfordOnline(data);
+        document.getElementById('welford-mean').textContent = welford.mean.toFixed(10);
+        document.getElementById('welford-var').textContent = welford.variance.toFixed(10);
+      }
+      
+
+    const welfordMeanErr = Math.abs(welford.mean - truth.mean);
+    const welfordVarErr = Math.abs(welford.variance - truth.variance);
+    const welfordRelErr = Math.abs(welfordVarErr / truth.variance * 100);
+
+    let welfordErrDisplay;
+    if (welfordRelErr < 0.01) {
+    welfordErrDisplay = welfordRelErr.toFixed(6) + '%';
+    } else if (welfordRelErr < 1) {
+    welfordErrDisplay = welfordRelErr.toFixed(4) + '%';
+    } else {
+    welfordErrDisplay = welfordRelErr.toFixed(2) + '%';
+    }
+
+    document.getElementById('welford-error').textContent = welfordErrDisplay;
+    document.getElementById('welford-error').className = welfordRelErr < 0.01 ? 'badge bg-success' : welfordRelErr < 1 ? 'badge bg-warning' : 'badge bg-danger';
+
+    document.getElementById('welford-mean-error').textContent = welfordMeanErr.toExponential(6);
+    document.getElementById('welford-var-error').textContent = welfordVarErr.toExponential(6);
+    document.getElementById('welford-memory').textContent = (welford.memory / 1024).toFixed(2) + ' KB';
+    document.getElementById('welford-time').textContent = (welford.time || naive.time).toFixed(3) + ' ms';
+
+
+      
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('status-msg').textContent = 'Complete!';
+      document.getElementById('runBtn').style.display = 'inline-block';
+      document.getElementById('stopBtn').style.display = 'none';
+      
+      if (!stopRequested) {
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    document.getElementById('runBtn').addEventListener('click', runComparison);
+    document.getElementById('stopBtn').addEventListener('click', () => {
+      stopRequested = true;
+      document.getElementById('status-msg').textContent = 'Stopped';
+      document.getElementById('runBtn').style.display = 'inline-block';
+      document.getElementById('stopBtn').style.display = 'none';
+    });
+
+    window.addEventListener('load', () => setTimeout(runComparison, 500));
+  </script>
+
+</body>
+</html>

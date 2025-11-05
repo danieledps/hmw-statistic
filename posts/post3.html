@@ -336,25 +336,22 @@
 
   <footer class="py-4">
     <div class="container">
-      <p class="mb-0 text-muted">© 2025 Statistics Blog - Daniele De Pascali</p>
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
     </div>
   </footer>
 
   <script>
-    // RSA parameters (toy)
     const RSA_P = 61;
     const RSA_Q = 53;
-    const RSA_N = RSA_P * RSA_Q;  // 3233
-    const RSA_PHI = (RSA_P - 1) * (RSA_Q - 1);  // 3120
+    const RSA_N = RSA_P * RSA_Q;
+    const RSA_PHI = (RSA_P - 1) * (RSA_Q - 1);
     const RSA_E = 17;
-    const RSA_D = 2753;  // 17 * 2753 ≡ 1 (mod 3120)
+    const RSA_D = 2753;
 
-    // English frequency order (approx.)
     const ENGLISH_FREQ_ORDER = [
       'E','T','A','O','I','N','S','H','R','D','L','C','U','M','W','F','G','Y','P','B','V','K','J','X','Q','Z'
     ];
 
-    // Populate displayed params
     document.getElementById('display-p').textContent = RSA_P;
     document.getElementById('display-q').textContent = RSA_Q;
     document.getElementById('display-n').textContent = RSA_N;
@@ -362,7 +359,6 @@
     document.getElementById('display-e').textContent = RSA_E;
     document.getElementById('display-d').textContent = RSA_D;
 
-    // Fast modular exponentiation
     function modPow(base, exp, mod) {
       if (mod === 1) return 0;
       let result = 1;
@@ -393,10 +389,10 @@
         return;
       }
 
-      // Hide all steps
+
       for (let i = 1; i <= 5; i++) document.getElementById('step' + i).style.display = 'none';
 
-      // Step 1 — mapping
+
       const nums = [];
       const ciphers = [];
       for (let i = 0; i < cleaned.length; i++) {
@@ -408,7 +404,6 @@
       document.getElementById('numeric-msg').textContent = nums.join(', ');
       document.getElementById('step1').style.display = 'block';
 
-      // Step 2 — encryption table
       document.getElementById('encrypted-numbers').textContent = ciphers.join(', ');
       const encTbody = document.getElementById('encryption-tbody');
       encTbody.innerHTML = '';
@@ -428,7 +423,7 @@
       }
       document.getElementById('step2').style.display = 'block';
 
-      // Step 3 — plaintext frequency
+
       const pFreq = {};
       for (const ch of cleaned) pFreq[ch] = (pFreq[ch] || 0) + 1;
       const pSorted = Object.entries(pFreq).sort((a,b)=>b[1]-a[1]);
@@ -450,7 +445,6 @@
       }
       document.getElementById('step3').style.display = 'block';
 
-      // Step 4 — ciphertext frequency
       const cFreq = {};
       for (const c of ciphers) cFreq[c] = (cFreq[c] || 0) + 1;
       const cSorted = Object.entries(cFreq).sort((a,b)=>b[1]-a[1]);
@@ -472,7 +466,6 @@
       }
       document.getElementById('step4').style.display = 'block';
 
-      // Step 5 — frequency-based mapping
       const mapping = {};
       for (let i = 0; i < cSorted.length; i++) {
         const cipherNum = cSorted[i][0];
@@ -496,13 +489,11 @@
         `;
       }
 
-      // Apply mapping to decrypt
       let guessed = '';
       for (const c of ciphers) guessed += mapping[c] || '?';
       document.getElementById('decrypted-msg').textContent = guessed;
       document.getElementById('compare-original').textContent = cleaned;
 
-      // Accuracy estimate (only exact letter matches)
       let correct = 0;
       for (let i = 0; i < cleaned.length; i++) if (guessed[i] === cleaned[i]) correct++;
       const acc = (100 * correct / cleaned.length).toFixed(1);

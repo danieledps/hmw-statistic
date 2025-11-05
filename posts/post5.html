@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Measures of Location and Dispersion - Statistics Homework V</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-10 mx-auto">
+         <p class="text-muted mb-2">
+           <i class="bi bi-calendar3 me-1"></i>November 5, 2025
+         </p>
+         <h1 class="display-6 gradient-text mb-2">Measures of Location and Dispersion</h1>
+         <p class="lead mb-0">Understanding Central Tendency and Variability in Statistical Analysis — Daniele De Pascali 1984462</p>
+       </div>
+     </div>
+   </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Introduction to Descriptive Statistics</h2>
+      <p>Descriptive statistics provide simple summaries about datasets to communicate information efficiently. Two fundamental categories are measures of location (central tendency) and measures of dispersion (variability), which together offer a complete picture of data distribution.</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h3 class="h6 mb-3"><i class="bi bi-bullseye me-2"></i>Measures of Location</h3>
+            <p class="mb-2">Measures of central tendency identify the center or typical value of a dataset:</p>
+            <ul class="mb-0">
+              <li><strong>Mean:</strong> arithmetic average of all values</li>
+              <li><strong>Median:</strong> middle value when data is ordered</li>
+              <li><strong>Mode:</strong> most frequently occurring value</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h3 class="h6 mb-3"><i class="bi bi-arrows-expand me-2"></i>Measures of Dispersion</h3>
+            <p class="mb-2">Measures of variability describe how spread out the data is:</p>
+            <ul class="mb-0">
+              <li><strong>Range:</strong> difference between max and min</li>
+              <li><strong>Variance:</strong> average squared deviation from mean</li>
+              <li><strong>Standard Deviation:</strong> square root of variance</li>
+              <li><strong>Interquartile Range (IQR):</strong> range of middle 50%</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Key Insight:</strong> Central tendency alone doesn't describe data completely. Two datasets can have identical means but vastly different spreads, making variability measures essential for comprehensive analysis.
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Measures of Central Tendency</h2>
+      
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-1-circle-fill me-2"></i>Arithmetic Mean</h3>
+        <p>The mean is the sum of all values divided by the number of values. It uses all data points, making it the most comprehensive measure.</p>
+        
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-2"><strong>Formula (Sample):</strong></p>
+          <p class="mb-3">\[ \bar{x} = \frac{\sum_{i=1}^{n} x_i}{n} = \frac{x_1 + x_2 + \cdots + x_n}{n} \]</p>
+          <p class="mb-2"><strong>Formula (Population):</strong></p>
+          <p class="mb-0">\[ \mu = \frac{\sum_{i=1}^{N} x_i}{N} \]</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advantages</h6>
+              <ul class="mb-0 small">
+                <li>Uses all data points for comprehensive representation</li>
+                <li>Mathematically tractable for further analysis</li>
+                <li>Minimizes sum of squared deviations</li>
+                <li>Best for normally distributed data</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i>Limitations</h6>
+              <ul class="mb-0 small">
+                <li>Highly sensitive to outliers and extreme values</li>
+                <li>Can be misleading for skewed distributions</li>
+                <li>May not represent "typical" value in asymmetric data</li>
+                <li>Requires interval or ratio level data</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-2-circle-fill me-2"></i>Median</h3>
+        <p>The median is the middle value when data is arranged in order. For even-numbered datasets, it's the average of the two middle values.</p>
+        
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-2"><strong>Formula (Odd n):</strong></p>
+          <p class="mb-3">\[ \text{Median} = x_{\left(\frac{n+1}{2}\right)} \]</p>
+          <p class="mb-2"><strong>Formula (Even n):</strong></p>
+          <p class="mb-0">\[ \text{Median} = \frac{x_{\left(\frac{n}{2}\right)} + x_{\left(\frac{n}{2}+1\right)}}{2} \]</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advantages</h6>
+              <ul class="mb-0 small">
+                <li>Robust against outliers and extreme values</li>
+                <li>Better for skewed distributions</li>
+                <li>Represents true "middle" of ordered data</li>
+                <li>Applicable to ordinal, interval, and ratio data</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i>Limitations</h6>
+              <ul class="mb-0 small">
+                <li>Doesn't utilize all data points</li>
+                <li>Less mathematically tractable than mean</li>
+                <li>May not fully capture distribution characteristics</li>
+                <li>Requires data to be ordered</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-3-circle-fill me-2"></i>Mode</h3>
+        <p>The mode is the value that occurs most frequently in the dataset. A dataset can have no mode, one mode (unimodal), or multiple modes (bimodal, multimodal).</p>
+        
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-0"><strong>Definition:</strong> \( \text{Mode} = \text{value with highest frequency} \)</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advantages</h6>
+              <ul class="mb-0 small">
+                <li>Can be used with nominal (categorical) data</li>
+                <li>Useful for identifying peaks in distributions</li>
+                <li>Easy to identify and understand</li>
+                <li>Not affected by extreme values</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i>Limitations</h6>
+              <ul class="mb-0 small">
+                <li>May not exist if all values are unique</li>
+                <li>Multiple modes can complicate interpretation</li>
+                <li>Doesn't provide information about spread</li>
+                <li>Less useful for continuous data</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-warning" role="alert">
+        <i class="bi bi-lightbulb-fill me-2"></i>
+        <strong>Empirical Relationship:</strong> For moderately skewed distributions, the relationship \( \text{Mode} \approx 3 \times \text{Median} - 2 \times \text{Mean} \) often holds approximately.
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Measures of Dispersion</h2>
+      
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-1-circle-fill me-2"></i>Range</h3>
+        <p>The range is the simplest measure of dispersion, calculated as the difference between the maximum and minimum values.</p>
+        
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-0"><strong>Formula:</strong> \( R = x_{\text{max}} - x_{\text{min}} \)</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advantages</h6>
+              <ul class="mb-0 small">
+                <li>Extremely simple to calculate</li>
+                <li>Provides quick sense of overall spread</li>
+                <li>Easy to understand and communicate</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i>Limitations</h6>
+              <ul class="mb-0 small">
+                <li>Highly sensitive to outliers</li>
+                <li>Uses only two data points</li>
+                <li>Doesn't reflect distribution shape</li>
+                <li>Unreliable for small samples</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-2-circle-fill me-2"></i>Variance</h3>
+        <p>Variance measures the average squared deviation from the mean, quantifying how data points spread around the central value.</p>
+        
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-2"><strong>Sample Variance:</strong></p>
+          <p class="mb-3">\[ s^2 = \frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1} \]</p>
+          <p class="mb-2"><strong>Population Variance:</strong></p>
+          <p class="mb-0">\[ \sigma^2 = \frac{\sum_{i=1}^{N} (x_i - \mu)^2}{N} \]</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advantages</h6>
+              <ul class="mb-0 small">
+                <li>Uses all data points in calculation</li>
+                <li>Mathematically convenient for statistical tests</li>
+                <li>Sample variance is unbiased estimator</li>
+                <li>Foundation for many statistical methods</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i>Limitations</h6>
+              <ul class="mb-0 small">
+                <li>Units are squared, making interpretation difficult</li>
+                <li>Heavily influenced by outliers</li>
+                <li>Not in original scale of data</li>
+                <li>Less intuitive than standard deviation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-3-circle-fill me-2"></i>Standard Deviation</h3>
+        <p>The standard deviation is the square root of variance, representing the average distance of data points from the mean in original units.</p>
+        
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-2"><strong>Sample Standard Deviation:</strong></p>
+          <p class="mb-3">\[ s = \sqrt{\frac{\sum_{i=1}^{n} (x_i - \bar{x})^2}{n-1}} \]</p>
+          <p class="mb-2"><strong>Population Standard Deviation:</strong></p>
+          <p class="mb-0">\[ \sigma = \sqrt{\frac{\sum_{i=1}^{N} (x_i - \mu)^2}{N}} \]</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advantages</h6>
+              <ul class="mb-0 small">
+                <li>In same units as original data</li>
+                <li>Most widely used measure of variability</li>
+                <li>Interpretable with empirical rules (68-95-99.7)</li>
+                <li>Essential for inferential statistics</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i>Limitations</h6>
+              <ul class="mb-0 small">
+                <li>Sensitive to outliers and extreme values</li>
+                <li>Sample SD is biased (though less so than alternatives)</li>
+                <li>Less appropriate for skewed distributions</li>
+                <li>Assumes interval or ratio data</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-4-circle-fill me-2"></i>Interquartile Range (IQR)</h3>
+        <p>The IQR measures the spread of the middle 50% of data, calculated as the difference between the third quartile (Q3) and first quartile (Q1).</p>
+        
+        <div class="p-3 border rounded bg-light mb-3">
+          <p class="mb-2"><strong>Formula:</strong></p>
+          <p class="mb-3">\[ \text{IQR} = Q_3 - Q_1 \]</p>
+          <p class="mb-1">Where:</p>
+          <ul class="mb-0">
+            <li>\( Q_1 \) = 25th percentile (first quartile)</li>
+            <li>\( Q_3 \) = 75th percentile (third quartile)</li>
+          </ul>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #e8f5e9;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Advantages</h6>
+              <ul class="mb-0 small">
+                <li>Robust against outliers</li>
+                <li>Better for skewed distributions</li>
+                <li>Useful for identifying outliers (IQR method)</li>
+                <li>Focuses on central data concentration</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 border rounded" style="background-color: #ffebee;">
+              <h6 class="fw-semibold mb-2"><i class="bi bi-x-circle-fill text-danger me-2"></i>Limitations</h6>
+              <ul class="mb-0 small">
+                <li>Ignores tails of distribution</li>
+                <li>Uses only two values (Q1 and Q3)</li>
+                <li>Less efficient for normal distributions</li>
+                <li>Not as mathematically tractable</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 fw-bold mb-3">Interactive Calculator</h2>
+
+      <div class="p-4 border rounded mb-4 bg-light">
+        <label for="dataInput" class="form-label fw-semibold">Enter your data (comma-separated numbers):</label>
+        <textarea class="form-control mb-3" id="dataInput" rows="3" placeholder="e.g., 12, 15, 18, 22, 25, 28, 30, 35, 40, 45">12, 15, 18, 22, 25, 28, 30, 35, 40, 45</textarea>
+        <button class="btn btn-dark" id="calculateBtn"><i class="bi bi-calculator me-2"></i>Calculate Statistics</button>
+        <small id="error-msg" class="ms-2 text-danger"></small>
+      </div>
+
+      <div id="results" style="display:none;">
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
+            <div class="p-4 border rounded" style="background-color: #e3f2fd;">
+              <h3 class="h5 mb-3"><i class="bi bi-bullseye me-2"></i>Measures of Location</h3>
+              <div class="mb-2">
+                <strong>Mean:</strong> <span id="result-mean" class="fs-5 text-primary"></span>
+              </div>
+              <div class="mb-2">
+                <strong>Median:</strong> <span id="result-median" class="fs-5 text-primary"></span>
+              </div>
+              <div class="mb-2">
+                <strong>Mode:</strong> <span id="result-mode" class="fs-5 text-primary"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-4 border rounded" style="background-color: #fff3e0;">
+              <h3 class="h5 mb-3"><i class="bi bi-arrows-expand me-2"></i>Measures of Dispersion</h3>
+              <div class="mb-2">
+                <strong>Range:</strong> <span id="result-range" class="fs-5 text-warning"></span>
+              </div>
+              <div class="mb-2">
+                <strong>Variance:</strong> <span id="result-variance" class="fs-5 text-warning"></span>
+              </div>
+              <div class="mb-2">
+                <strong>Std Dev:</strong> <span id="result-std" class="fs-5 text-warning"></span>
+              </div>
+              <div class="mb-2">
+                <strong>IQR:</strong> <span id="result-iqr" class="fs-5 text-warning"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 border rounded bg-light mb-4">
+          <h3 class="h6 mb-3">Data Summary</h3>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="text-muted small">Sample Size</div>
+              <div class="fw-bold" id="result-n"></div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">Minimum</div>
+              <div class="fw-bold" id="result-min"></div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">Maximum</div>
+              <div class="fw-bold" id="result-max"></div>
+            </div>
+            <div class="col-md-3">
+              <div class="text-muted small">Sum</div>
+              <div class="fw-bold" id="result-sum"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 border rounded" style="background-color: #f3e5f5;">
+          <h3 class="h6 mb-3">Five-Number Summary</h3>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="text-center">
+              <div class="text-muted small">Min</div>
+              <div class="fw-bold" id="summary-min"></div>
+            </div>
+            <div class="text-center">
+              <div class="text-muted small">Q1</div>
+              <div class="fw-bold text-primary" id="summary-q1"></div>
+            </div>
+            <div class="text-center">
+              <div class="text-muted small">Median (Q2)</div>
+              <div class="fw-bold text-success" id="summary-q2"></div>
+            </div>
+            <div class="text-center">
+              <div class="text-muted small">Q3</div>
+              <div class="fw-bold text-primary" id="summary-q3"></div>
+            </div>
+            <div class="text-center">
+              <div class="text-muted small">Max</div>
+              <div class="fw-bold" id="summary-max"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Comparison and Selection Guide</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Measure</th>
+              <th>Best Used When</th>
+              <th>Level of Measurement</th>
+              <th>Sensitivity to Outliers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mean</strong></td>
+              <td>Data is normally distributed and symmetric</td>
+              <td>Interval, Ratio</td>
+              <td class="text-danger">High</td>
+            </tr>
+            <tr>
+              <td><strong>Median</strong></td>
+              <td>Data is skewed or contains outliers</td>
+              <td>Ordinal, Interval, Ratio</td>
+              <td class="text-success">Low</td>
+            </tr>
+            <tr>
+              <td><strong>Mode</strong></td>
+              <td>Data is categorical or nominal</td>
+              <td>Nominal, Ordinal, Interval, Ratio</td>
+              <td class="text-success">None</td>
+            </tr>
+            <tr>
+              <td><strong>Range</strong></td>
+              <td>Quick estimate needed; small datasets</td>
+              <td>Ordinal, Interval, Ratio</td>
+              <td class="text-danger">Very High</td>
+            </tr>
+            <tr>
+              <td><strong>Variance</strong></td>
+              <td>Statistical modeling and hypothesis testing</td>
+              <td>Interval, Ratio</td>
+              <td class="text-danger">High</td>
+            </tr>
+            <tr>
+              <td><strong>Standard Deviation</strong></td>
+              <td>Normal distributions; need interpretable spread</td>
+              <td>Interval, Ratio</td>
+              <td class="text-danger">High</td>
+            </tr>
+            <tr>
+              <td><strong>IQR</strong></td>
+              <td>Skewed data or presence of outliers</td>
+              <td>Ordinal, Interval, Ratio</td>
+              <td class="text-success">Low</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Distribution Types and Measure Selection</h2>
+      
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="p-4 border rounded text-center" style="background-color: #e8f5e9;">
+            <h3 class="h6 mb-3">Normal Distribution</h3>
+            <p class="small mb-2">Mean = Median = Mode</p>
+            <p class="small mb-3">Symmetric bell curve</p>
+            <div class="alert alert-success mb-0 py-2">
+              <strong>Use:</strong> Mean & Standard Deviation
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 border rounded text-center" style="background-color: #fff3e0;">
+            <h3 class="h6 mb-3">Skewed Distribution</h3>
+            <p class="small mb-2">Mean ≠ Median ≠ Mode</p>
+            <p class="small mb-3">Asymmetric with tail</p>
+            <div class="alert alert-warning mb-0 py-2">
+              <strong>Use:</strong> Median & IQR
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 border rounded text-center" style="background-color: #e3f2fd;">
+            <h3 class="h6 mb-3">Categorical Data</h3>
+            <p class="small mb-2">Nominal or ordinal</p>
+            <p class="small mb-3">Discrete categories</p>
+            <div class="alert alert-info mb-0 py-2">
+              <strong>Use:</strong> Mode & Frequencies
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function parseData(input) {
+      const cleaned = input.replace(/[^\d.,-]/g, '');
+      const values = cleaned.split(',')
+        .map(v => parseFloat(v.trim()))
+        .filter(v => !isNaN(v));
+      return values;
+    }
+
+    function mean(arr) {
+      return arr.reduce((a, b) => a + b, 0) / arr.length;
+    }
+
+    function median(arr) {
+      const sorted = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 === 0
+        ? (sorted[mid - 1] + sorted[mid]) / 2
+        : sorted[mid];
+    }
+
+    function mode(arr) {
+      const freq = {};
+      arr.forEach(v => freq[v] = (freq[v] || 0) + 1);
+      const maxFreq = Math.max(...Object.values(freq));
+      const modes = Object.keys(freq).filter(k => freq[k] === maxFreq);
+      
+      if (modes.length === arr.length) return 'No mode (all unique)';
+      return modes.map(m => parseFloat(m)).join(', ');
+    }
+
+    function variance(arr) {
+      const m = mean(arr);
+      const squaredDiffs = arr.map(v => Math.pow(v - m, 2));
+      return squaredDiffs.reduce((a, b) => a + b, 0) / (arr.length - 1);
+    }
+
+    function stdDev(arr) {
+      return Math.sqrt(variance(arr));
+    }
+
+    function quartile(arr, q) {
+      const sorted = [...arr].sort((a, b) => a - b);
+      const pos = (sorted.length - 1) * q;
+      const base = Math.floor(pos);
+      const rest = pos - base;
+      
+      if (sorted[base + 1] !== undefined) {
+        return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+      }
+      return sorted[base];
+    }
+
+    function calculateStatistics() {
+      const errorMsg = document.getElementById('error-msg');
+      errorMsg.textContent = '';
+
+      const input = document.getElementById('dataInput').value;
+      const data = parseData(input);
+
+      if (data.length < 2) {
+        errorMsg.textContent = 'Please enter at least 2 valid numbers.';
+        return;
+      }
+
+      const sorted = [...data].sort((a, b) => a - b);
+      const meanVal = mean(data);
+      const medianVal = median(data);
+      const modeVal = mode(data);
+      const rangeVal = Math.max(...data) - Math.min(...data);
+      const varianceVal = variance(data);
+      const stdDevVal = stdDev(data);
+      const q1 = quartile(data, 0.25);
+      const q3 = quartile(data, 0.75);
+      const iqrVal = q3 - q1;
+
+      document.getElementById('result-mean').textContent = meanVal.toFixed(2);
+      document.getElementById('result-median').textContent = medianVal.toFixed(2);
+      document.getElementById('result-mode').textContent = modeVal;
+      document.getElementById('result-range').textContent = rangeVal.toFixed(2);
+      document.getElementById('result-variance').textContent = varianceVal.toFixed(2);
+      document.getElementById('result-std').textContent = stdDevVal.toFixed(2);
+      document.getElementById('result-iqr').textContent = iqrVal.toFixed(2);
+
+      document.getElementById('result-n').textContent = data.length;
+      document.getElementById('result-min').textContent = Math.min(...data).toFixed(2);
+      document.getElementById('result-max').textContent = Math.max(...data).toFixed(2);
+      document.getElementById('result-sum').textContent = data.reduce((a, b) => a + b, 0).toFixed(2);
+
+      document.getElementById('summary-min').textContent = Math.min(...data).toFixed(2);
+      document.getElementById('summary-q1').textContent = q1.toFixed(2);
+      document.getElementById('summary-q2').textContent = medianVal.toFixed(2);
+      document.getElementById('summary-q3').textContent = q3.toFixed(2);
+      document.getElementById('summary-max').textContent = Math.max(...data).toFixed(2);
+
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    document.getElementById('calculateBtn').addEventListener('click', calculateStatistics);
+    
+    document.getElementById('dataInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        calculateStatistics();
+      }
+    });
+
+    window.addEventListener('load', () => setTimeout(calculateStatistics, 400));
+  </script>
+
+</body>
+</html>
