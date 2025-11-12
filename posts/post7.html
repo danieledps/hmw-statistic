@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Server Security Random Walk - Statistics Homework VII</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-10 mx-auto">
+         <p class="text-muted mb-2">
+           <i class="bi bi-calendar3 me-1"></i>November 12, 2025
+         </p>
+         <h1 class="display-6 gradient-text mb-2">Server Security Random Walk Simulation</h1>
+         <p class="lead mb-0">Modeling security trajectories and binomial convergence — Daniele De Pascali 1984462</p>
+       </div>
+     </div>
+   </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Security Model Overview</h2>
+      <p>A server receives weekly security updates over \( n \) weeks while facing \( m \) attackers. Each week, with probability \( p \), at least one attacker breaches the system. We track cumulative security scores: +1 for secure weeks, -1 for breaches.</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h3 class="h6 mb-3"><i class="bi bi-diagram-3-fill me-2"></i>Model Parameters</h3>
+            <ul class="mb-0">
+              <li><strong>n:</strong> Number of weeks</li>
+              <li><strong>m:</strong> Number of attackers</li>
+              <li><strong>p:</strong> Breach probability per week</li>
+              <li><strong>Score:</strong> \( S = \sum_{i=1}^{n} X_i \) where \( X_i \in \{-1, +1\} \)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h3 class="h6 mb-3"><i class="bi bi-shuffle me-2"></i>Random Walk Connection</h3>
+            <p class="mb-2">Each trajectory is a random walk where:</p>
+            <ul class="mb-0">
+              <li>Step up (+1): Server secure</li>
+              <li>Step down (-1): Server breached</li>
+              <li>Final position: Cumulative score</li>
+              <li>Distribution converges to binomial as \( n \to \infty \)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <strong>Key Insight:</strong> The final score distribution approximates \( \text{Binomial}(n, 1-p) \) transformed to the range \( [-n, n] \). If \( B \sim \text{Binomial}(n, 1-p) \) counts secure weeks, then \( S = 2B - n \).
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Simulation Parameters</h2>
+      
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Weeks (n)</label>
+          <input type="number" class="form-control" id="input-n" value="20" min="5" max="100">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Attackers (m)</label>
+          <input type="number" class="form-control" id="input-m" value="10" min="1" max="50">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Breach Prob (p)</label>
+          <input type="number" class="form-control" id="input-p" value="0.3" min="0.01" max="0.99" step="0.05">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label fw-semibold">Trajectories</label>
+          <input type="number" class="form-control" id="input-sims" value="1000" min="100" max="10000" step="100">
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-12">
+          <button class="btn btn-dark btn-lg" id="runSimBtn">
+            <i class="bi bi-play-fill me-2"></i>Run Simulation
+          </button>
+          <small class="ms-3 text-muted">Generate random security trajectories and analyze score distribution</small>
+        </div>
+      </div>
+
+      <div id="param-display" class="p-3 border rounded bg-light" style="display:none;">
+        <div class="row text-center">
+          <div class="col-md-3">
+            <div class="text-muted small">Weeks</div>
+            <div class="fw-bold fs-5" id="display-n">—</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small">Attackers</div>
+            <div class="fw-bold fs-5" id="display-m">—</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small">Breach Probability</div>
+            <div class="fw-bold fs-5" id="display-p">—</div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-muted small">Simulations</div>
+            <div class="fw-bold fs-5" id="display-sims">—</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="step1" class="mb-5" style="display:none;">
+      <h2 class="h5 mb-3"><i class="bi bi-1-circle-fill me-2"></i>Step 1: Sample Trajectory Visualization</h2>
+      <p>A single random walk showing the server's cumulative security score over \( n \) weeks:</p>
+      
+      <div class="p-4 border rounded bg-light mb-3">
+        <div id="trajectory-display" class="font-monospace small" style="overflow-x: auto; white-space: nowrap;"></div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="p-3 border rounded">
+            <h6 class="fw-semibold mb-2">Week-by-Week Results</h6>
+            <div id="week-results" style="max-height: 300px; overflow-y: auto;"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 border rounded">
+            <h6 class="fw-semibold mb-2">Trajectory Statistics</h6>
+            <div id="traj-stats"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="step2" class="mb-5" style="display:none;">
+      <h2 class="h5 mb-3"><i class="bi bi-2-circle-fill me-2"></i>Step 2: Multiple Trajectories</h2>
+      <p>Simulating multiple independent server lifecycles to observe score distribution patterns:</p>
+
+      <div class="table-responsive mb-3">
+        <table class="table table-sm table-striped">
+          <thead class="table-light">
+            <tr>
+              <th>Trajectory #</th>
+              <th>Secure Weeks</th>
+              <th>Breached Weeks</th>
+              <th>Final Score</th>
+              <th>Score Range</th>
+            </tr>
+          </thead>
+          <tbody id="trajectories-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="p-3 border rounded bg-light">
+        <h6 class="fw-semibold mb-2">Summary Statistics</h6>
+        <div id="multi-traj-stats"></div>
+      </div>
+    </section>
+
+    <section id="step3" class="mb-5" style="display:none;">
+      <h2 class="h5 mb-3"><i class="bi bi-3-circle-fill me-2"></i>Step 3: Score Distribution</h2>
+      <p>Frequency distribution of final scores across all simulated trajectories:</p>
+
+      <div class="table-responsive mb-3">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Final Score</th>
+              <th>Frequency</th>
+              <th>Percentage</th>
+              <th>Distribution</th>
+            </tr>
+          </thead>
+          <tbody id="score-dist-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="p-3 border rounded bg-light">
+            <h6 class="fw-semibold mb-2">Distribution Metrics</h6>
+            <div id="dist-metrics"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 border rounded bg-light">
+            <h6 class="fw-semibold mb-2">Visual Histogram</h6>
+            <div id="histogram-viz"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="step4" class="mb-5" style="display:none;">
+      <h2 class="h5 mb-3"><i class="bi bi-4-circle-fill me-2"></i>Step 4: Binomial Distribution Comparison</h2>
+      <p>Comparing simulated distribution with theoretical binomial distribution \( B \sim \text{Binomial}(n, 1-p) \), where final score \( S = 2B - n \):</p>
+
+      <div class="p-4 border rounded bg-light mb-3">
+        <h6 class="fw-semibold mb-3">Mathematical Framework</h6>
+        <p class="mb-2">Let \( B \) be the number of secure weeks. Then:</p>
+        <ul class="mb-2">
+          <li>\( B \sim \text{Binomial}(n, q) \) where \( q = 1 - p \)</li>
+          <li>Final score: \( S = (\text{secure weeks}) - (\text{breached weeks}) = B - (n - B) = 2B - n \)</li>
+          <li>Score range: \( S \in [-n, n] \) with step size 2</li>
+          <li>Expected score: \( E[S] = 2E[B] - n = 2nq - n = n(2q - 1) \)</li>
+        </ul>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Score (S)</th>
+              <th>Secure Weeks (B)</th>
+              <th>Simulated Freq</th>
+              <th>Theoretical Prob</th>
+              <th>Expected Freq</th>
+              <th>Difference</th>
+            </tr>
+          </thead>
+          <tbody id="binomial-compare-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="p-3 border rounded mt-3" style="background-color: #e8f5e9;">
+        <h6 class="fw-semibold mb-2">Convergence Analysis</h6>
+        <div id="convergence-results"></div>
+      </div>
+    </section>
+
+    <section id="step5" class="mb-5" style="display:none;">
+      <h2 class="h5 mb-3"><i class="bi bi-5-circle-fill me-2"></i>Step 5: Random Walk Properties</h2>
+      
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post">
+            <h6 class="fw-semibold mb-3">Symmetric vs Asymmetric Walks</h6>
+            <ul class="mb-0">
+              <li><strong>Symmetric:</strong> \( p = 0.5 \) → \( E[S] = 0 \)</li>
+              <li><strong>Biased up:</strong> \( p < 0.5 \) → \( E[S] > 0 \)</li>
+              <li><strong>Biased down:</strong> \( p > 0.5 \) → \( E[S] < 0 \)</li>
+              <li>Current walk: <span id="walk-type" class="fw-bold"></span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post">
+            <h6 class="fw-semibold mb-3">Variance and Spread</h6>
+            <div id="variance-analysis"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 border rounded bg-light mt-4">
+        <h6 class="fw-semibold mb-3">Central Limit Theorem Connection</h6>
+        <p class="mb-2">As \( n \to \infty \), the distribution of scores approaches a normal distribution:</p>
+        <p class="mb-0">\[ S \approx \mathcal{N}(\mu, \sigma^2) \text{ where } \mu = n(2q-1), \quad \sigma^2 = 4nq(1-q) \]</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
+    </div>
+  </footer>
+
+  <script>
+    function binomialPMF(n, k, p) {
+      function binomCoeff(n, k) {
+        if (k > n) return 0;
+        if (k === 0 || k === n) return 1;
+        let result = 1;
+        for (let i = 0; i < k; i++) {
+          result *= (n - i) / (i + 1);
+        }
+        return result;
+      }
+      return binomCoeff(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+    }
+
+    function runSimulation() {
+      const n = parseInt(document.getElementById('input-n').value);
+      const m = parseInt(document.getElementById('input-m').value);
+      const p = parseFloat(document.getElementById('input-p').value);
+      const numSims = parseInt(document.getElementById('input-sims').value);
+
+      document.getElementById('display-n').textContent = n;
+      document.getElementById('display-m').textContent = m;
+      document.getElementById('display-p').textContent = p.toFixed(2);
+      document.getElementById('display-sims').textContent = numSims.toLocaleString();
+      document.getElementById('param-display').style.display = 'block';
+
+      for (let i = 1; i <= 5; i++) {
+        document.getElementById('step' + i).style.display = 'none';
+      }
+
+      const sampleTraj = generateTrajectory(n, p);
+      displaySampleTrajectory(sampleTraj, n);
+      document.getElementById('step1').style.display = 'block';
+
+      const allTrajectories = [];
+      for (let i = 0; i < numSims; i++) {
+        allTrajectories.push(generateTrajectory(n, p));
+      }
+      
+      displayMultipleTrajectories(allTrajectories.slice(0, 10), n);
+      document.getElementById('step2').style.display = 'block';
+
+      const scores = allTrajectories.map(t => t.finalScore);
+      displayScoreDistribution(scores, n);
+      document.getElementById('step3').style.display = 'block';
+
+      displayBinomialComparison(scores, n, p, numSims);
+      document.getElementById('step4').style.display = 'block';
+
+      displayRandomWalkProperties(n, p, scores);
+      document.getElementById('step5').style.display = 'block';
+
+      document.getElementById('step1').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function generateTrajectory(n, p) {
+      let score = 0;
+      const path = [0];
+      const weeks = [];
+      
+      for (let week = 1; week <= n; week++) {
+        const breached = Math.random() < p;
+        const change = breached ? -1 : 1;
+        score += change;
+        path.push(score);
+        weeks.push({ week, breached, score });
+      }
+      
+      return {
+        finalScore: score,
+        path: path,
+        weeks: weeks,
+        secureCount: weeks.filter(w => !w.breached).length,
+        breachCount: weeks.filter(w => w.breached).length
+      };
+    }
+
+    function displaySampleTrajectory(traj, n) {
+      const display = document.getElementById('trajectory-display');
+      let viz = 'Start → ';
+      for (let i = 1; i <= n; i++) {
+        const val = traj.path[i];
+        viz += `${val >= 0 ? '+' : ''}${val}`;
+        if (i < n) viz += ' → ';
+      }
+      display.textContent = viz;
+
+      const weekResults = document.getElementById('week-results');
+      let html = '<div class="small">';
+      for (const w of traj.weeks) {
+        const badge = w.breached ? 'bg-danger' : 'bg-success';
+        const text = w.breached ? 'Breached (-1)' : 'Secure (+1)';
+        html += `<div class="mb-1"><span class="badge ${badge}">Week ${w.week}</span> ${text} → Score: ${w.score}</div>`;
+      }
+      html += '</div>';
+      weekResults.innerHTML = html;
+
+      const stats = document.getElementById('traj-stats');
+      stats.innerHTML = `
+        <div class="small">
+          <p class="mb-1"><strong>Final Score:</strong> ${traj.finalScore}</p>
+          <p class="mb-1"><strong>Secure Weeks:</strong> ${traj.secureCount} (${(100 * traj.secureCount / n).toFixed(1)}%)</p>
+          <p class="mb-1"><strong>Breached Weeks:</strong> ${traj.breachCount} (${(100 * traj.breachCount / n).toFixed(1)}%)</p>
+          <p class="mb-0"><strong>Max Score:</strong> ${Math.max(...traj.path)}</p>
+          <p class="mb-0"><strong>Min Score:</strong> ${Math.min(...traj.path)}</p>
+        </div>
+      `;
+    }
+
+    function displayMultipleTrajectories(trajs, n) {
+      const tbody = document.getElementById('trajectories-tbody');
+      tbody.innerHTML = '';
+      
+      trajs.forEach((traj, idx) => {
+        const row = tbody.insertRow();
+        const scoreColor = traj.finalScore >= 0 ? 'text-success' : 'text-danger';
+        row.innerHTML = `
+          <td class="text-center">${idx + 1}</td>
+          <td class="text-center">${traj.secureCount}</td>
+          <td class="text-center">${traj.breachCount}</td>
+          <td class="text-center fw-bold ${scoreColor}">${traj.finalScore}</td>
+          <td class="text-center small">[${Math.min(...traj.path)}, ${Math.max(...traj.path)}]</td>
+        `;
+      });
+
+      const allScores = trajs.map(t => t.finalScore);
+      const avgScore = allScores.reduce((a, b) => a + b, 0) / allScores.length;
+      const maxScore = Math.max(...allScores);
+      const minScore = Math.min(...allScores);
+
+      document.getElementById('multi-traj-stats').innerHTML = `
+        <div class="row small">
+          <div class="col-md-4"><strong>Mean Score:</strong> ${avgScore.toFixed(2)}</div>
+          <div class="col-md-4"><strong>Max Score:</strong> ${maxScore}</div>
+          <div class="col-md-4"><strong>Min Score:</strong> ${minScore}</div>
+        </div>
+      `;
+    }
+
+    function displayScoreDistribution(scores, n) {
+      const freq = {};
+      scores.forEach(s => freq[s] = (freq[s] || 0) + 1);
+      
+      const sorted = Object.entries(freq).sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+      const tbody = document.getElementById('score-dist-tbody');
+      tbody.innerHTML = '';
+      
+      const total = scores.length;
+      const maxFreq = Math.max(...Object.values(freq));
+      
+      sorted.forEach(([score, count]) => {
+        const pct = (100 * count / total).toFixed(2);
+        const barWidth = Math.min(100, (count / maxFreq) * 100);
+        const row = tbody.insertRow();
+        row.innerHTML = `
+          <td class="text-center fw-bold">${score}</td>
+          <td class="text-center">${count}</td>
+          <td class="text-center">${pct}%</td>
+          <td>
+            <div class="progress" style="height:20px;">
+              <div class="progress-bar bg-gradient-cyber" style="width:${barWidth}%;">${count}</div>
+            </div>
+          </td>
+        `;
+      });
+
+      const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+      const variance = scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / scores.length;
+      const stdDev = Math.sqrt(variance);
+
+      document.getElementById('dist-metrics').innerHTML = `
+        <div class="small">
+          <p class="mb-1"><strong>Mean:</strong> ${mean.toFixed(2)}</p>
+          <p class="mb-1"><strong>Std Dev:</strong> ${stdDev.toFixed(2)}</p>
+          <p class="mb-1"><strong>Variance:</strong> ${variance.toFixed(2)}</p>
+          <p class="mb-0"><strong>Range:</strong> [${Math.min(...scores)}, ${Math.max(...scores)}]</p>
+        </div>
+      `;
+
+      let histHtml = '<div class="small">';
+      const step = Math.ceil((Math.max(...scores) - Math.min(...scores)) / 10);
+      sorted.slice(0, 15).forEach(([score, count]) => {
+        const pct = (100 * count / total);
+        const bar = '█'.repeat(Math.ceil(pct * 0.5));
+        histHtml += `<div class="font-monospace">${score.toString().padStart(3)}: ${bar}</div>`;
+      });
+      histHtml += '</div>';
+      document.getElementById('histogram-viz').innerHTML = histHtml;
+    }
+
+    function displayBinomialComparison(scores, n, p, numSims) {
+      const q = 1 - p;
+      const freq = {};
+      scores.forEach(s => freq[s] = (freq[s] || 0) + 1);
+      
+      const tbody = document.getElementById('binomial-compare-tbody');
+      tbody.innerHTML = '';
+      
+      let chiSquare = 0;
+      let degreesOfFreedom = 0;
+      
+      for (let B = 0; B <= n; B++) {
+        const S = 2 * B - n;
+        const theoreticalProb = binomialPMF(n, B, q);
+        const expectedFreq = theoreticalProb * numSims;
+        const observedFreq = freq[S] || 0;
+        const diff = Math.abs(observedFreq - expectedFreq);
+        
+        if (expectedFreq >= 5) {
+          chiSquare += Math.pow(observedFreq - expectedFreq, 2) / expectedFreq;
+          degreesOfFreedom++;
+        }
+        
+        if (B % Math.max(1, Math.floor(n / 15)) === 0 || theoreticalProb > 0.01) {
+          const row = tbody.insertRow();
+          const diffColor = diff < expectedFreq * 0.1 ? 'text-success' : (diff < expectedFreq * 0.2 ? 'text-warning' : 'text-danger');
+          row.innerHTML = `
+            <td class="text-center fw-bold">${S}</td>
+            <td class="text-center">${B}</td>
+            <td class="text-center">${observedFreq}</td>
+            <td class="text-center">${(theoreticalProb * 100).toFixed(3)}%</td>
+            <td class="text-center">${expectedFreq.toFixed(1)}</td>
+            <td class="text-center ${diffColor}">${diff.toFixed(1)}</td>
+          `;
+        }
+      }
+
+      const expectedMean = n * (2 * q - 1);
+      const expectedVar = 4 * n * q * (1 - q);
+      const observedMean = scores.reduce((a, b) => a + b, 0) / scores.length;
+      const observedVar = scores.reduce((a, b) => a + Math.pow(b - observedMean, 2), 0) / scores.length;
+
+      document.getElementById('convergence-results').innerHTML = `
+        <div class="row small">
+          <div class="col-md-6">
+            <p class="mb-1"><strong>Theoretical Mean:</strong> ${expectedMean.toFixed(2)}</p>
+            <p class="mb-1"><strong>Observed Mean:</strong> ${observedMean.toFixed(2)}</p>
+            <p class="mb-0"><strong>Mean Error:</strong> ${Math.abs(expectedMean - observedMean).toFixed(3)}</p>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-1"><strong>Theoretical Variance:</strong> ${expectedVar.toFixed(2)}</p>
+            <p class="mb-1"><strong>Observed Variance:</strong> ${observedVar.toFixed(2)}</p>
+            <p class="mb-0"><strong>Variance Error:</strong> ${Math.abs(expectedVar - observedVar).toFixed(3)}</p>
+          </div>
+        </div>
+        <hr>
+        <p class="mb-0"><strong>Chi-Square Statistic:</strong> ${chiSquare.toFixed(2)} (df ≈ ${degreesOfFreedom})</p>
+        <p class="mb-0 mt-2 ${chiSquare / degreesOfFreedom < 1.5 ? 'text-success' : 'text-warning'}">
+          <i class="bi bi-${chiSquare / degreesOfFreedom < 1.5 ? 'check' : 'exclamation'}-circle-fill me-1"></i>
+          ${chiSquare / degreesOfFreedom < 1.5 ? 'Excellent fit!' : 'Reasonable fit.'}
+          The simulation closely matches the theoretical binomial distribution.
+        </p>
+      `;
+    }
+
+    function displayRandomWalkProperties(n, p, scores) {
+      const q = 1 - p;
+      const expectedScore = n * (2 * q - 1);
+      
+      let walkType = '';
+      if (Math.abs(p - 0.5) < 0.01) walkType = 'Symmetric (unbiased)';
+      else if (p < 0.5) walkType = 'Biased upward (server favored)';
+      else walkType = 'Biased downward (attackers favored)';
+      
+      document.getElementById('walk-type').textContent = walkType;
+
+      const theoreticalVar = 4 * n * q * (1 - q);
+      const theoreticalStd = Math.sqrt(theoreticalVar);
+
+      document.getElementById('variance-analysis').innerHTML = `
+        <div class="small">
+          <p class="mb-1"><strong>Theoretical Variance:</strong> ${theoreticalVar.toFixed(2)}</p>
+          <p class="mb-1"><strong>Theoretical Std Dev:</strong> ${theoreticalStd.toFixed(2)}</p>
+          <p class="mb-1"><strong>Expected Score:</strong> ${expectedScore.toFixed(2)}</p>
+          <p class="mb-0"><strong>95% CI:</strong> [${(expectedScore - 1.96 * theoreticalStd).toFixed(1)}, ${(expectedScore + 1.96 * theoreticalStd).toFixed(1)}]</p>
+        </div>
+      `;
+    }
+
+    document.getElementById('runSimBtn').addEventListener('click', runSimulation);
+    window.addEventListener('load', () => setTimeout(runSimulation, 300));
+  </script>
+
+</body>
+</html>

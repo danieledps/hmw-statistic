@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bernoulli Processes & Binomial Mathematics - Statistics Homework VIII</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-10 mx-auto">
+         <p class="text-muted mb-2">
+           <i class="bi bi-calendar3 me-1"></i>November 12, 2025
+         </p>
+         <h1 class="display-6 gradient-text mb-2">Bernoulli Processes & Binomial Mathematics</h1>
+         <p class="lead mb-0">Connecting random walks, LLN, combinatorics, and Pascal's triangle — Daniele De Pascali 1984462</p>
+       </div>
+     </div>
+   </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Comparing Two Fundamental Simulations</h2>
+      <p>This analysis connects two statistical homework assignments: the server security random walk (Homework VII) and the Bernoulli process simulation of the Law of Large Numbers. Both emerge from the same mathematical foundation—independent Bernoulli trials—yet illustrate different statistical principles.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Aspect</th>
+              <th>Law of Large Numbers Simulation</th>
+              <th>Server Security Random Walk</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Core Process</strong></td>
+              <td>Sequence of independent Bernoulli trials</td>
+              <td>Sequence of independent Bernoulli trials</td>
+            </tr>
+            <tr>
+              <td><strong>Random Variable</strong></td>
+              <td>Count of successes: \( X = \sum_{i=1}^{n} X_i \)</td>
+              <td>Cumulative score: \( S = \sum_{i=1}^{n} (2X_i - 1) \)</td>
+            </tr>
+            <tr>
+              <td><strong>Focus</strong></td>
+              <td>Sample mean convergence: \( \bar{X}_n \to p \)</td>
+              <td>Score distribution and random walk paths</td>
+            </tr>
+            <tr>
+              <td><strong>Distribution</strong></td>
+              <td>\( X \sim \text{Binomial}(n, p) \)</td>
+              <td>\( S = 2X - n \) where \( X \sim \text{Binomial}(n, 1-p) \)</td>
+            </tr>
+            <tr>
+              <td><strong>Visualization</strong></td>
+              <td>Convergence of proportions over time</td>
+              <td>Trajectory paths in 2D space</td>
+            </tr>
+            <tr>
+              <td><strong>Limiting Behavior</strong></td>
+              <td>Deterministic convergence (LLN)</td>
+              <td>Normal approximation (CLT)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-info" role="alert">
+        <i class="bi bi-lightbulb-fill me-2"></i>
+        <strong>Key Insight:</strong> Both simulations count the same underlying events (Bernoulli successes), but the LLN focuses on <em>convergence</em> of averages, while the random walk explores the <em>distribution</em> of cumulative deviations.
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Fundamental Similarities</h2>
+      
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light h-100">
+            <h3 class="h6 mb-3"><i class="bi bi-gear-fill me-2"></i>Shared Foundation</h3>
+            <ul class="mb-0">
+              <li><strong>Bernoulli trials:</strong> Both use sequences of binary outcomes</li>
+              <li><strong>Independence:</strong> Each trial is independent of others</li>
+              <li><strong>Stationary probability:</strong> \( p \) remains constant</li>
+              <li><strong>Additive structure:</strong> Sum individual trial outcomes</li>
+              <li><strong>Binomial distribution:</strong> Core mathematical framework</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light h-100">
+            <h3 class="h6 mb-3"><i class="bi bi-bar-chart-fill me-2"></i>Computational Parallels</h3>
+            <ul class="mb-0">
+              <li><strong>Simulation:</strong> Both use Monte Carlo methods</li>
+              <li><strong>Sample size:</strong> Performance improves with larger \( n \)</li>
+              <li><strong>Convergence:</strong> Both exhibit limiting behavior</li>
+              <li><strong>Variance reduction:</strong> Averaging stabilizes estimates</li>
+              <li><strong>Visualization:</strong> Trajectories reveal patterns</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 border rounded bg-light">
+        <h6 class="fw-semibold mb-3">Mathematical Connection</h6>
+        <p class="mb-2">Both simulations measure \( X = \sum_{i=1}^{n} X_i \) where \( X_i \sim \text{Bernoulli}(p) \):</p>
+        <ul class="mb-0">
+          <li><strong>LLN simulation:</strong> Tracks \( \frac{X}{n} \to p \) as \( n \to \infty \)</li>
+          <li><strong>Random walk:</strong> Transforms to \( S = 2X - n \in [-n, n] \) and studies distribution</li>
+          <li>Both rely on \( E[X] = np \) and \( \text{Var}(X) = np(1-p) \)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Key Differences</h2>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100" style="border-left: 4px solid #2c5364 !important;">
+            <h6 class="fw-semibold mb-3">Statistical Focus</h6>
+            <div class="mb-3">
+              <div class="badge bg-primary mb-2">LLN Simulation</div>
+              <p class="small mb-0">Demonstrates <strong>convergence</strong> of sample mean to population parameter</p>
+            </div>
+            <div>
+              <div class="badge bg-success mb-2">Random Walk</div>
+              <p class="small mb-0">Analyzes <strong>distribution</strong> of cumulative outcomes</p>
+            </div>
+          </h6>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100" style="border-left: 4px solid #203a43 !important;">
+            <h6 class="fw-semibold mb-3">Transformation</h6>
+            <div class="mb-3">
+              <div class="badge bg-primary mb-2">LLN Simulation</div>
+              <p class="small mb-0">Uses proportion: \( \bar{X}_n = \frac{X}{n} \in [0,1] \)</p>
+            </div>
+            <div>
+              <div class="badge bg-success mb-2">Random Walk</div>
+              <p class="small mb-0">Uses signed score: \( S = 2X - n \in [-n,n] \)</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100" style="border-left: 4px solid #0f2027 !important;">
+            <h6 class="fw-semibold mb-3">Interpretation</h6>
+            <div class="mb-3">
+              <div class="badge bg-primary mb-2">LLN Simulation</div>
+              <p class="small mb-0">How close are we to the <strong>true probability</strong>?</p>
+            </div>
+            <div>
+              <div class="badge bg-success mb-2">Random Walk</div>
+              <p class="small mb-0">What is the <strong>net outcome</strong> of wins vs losses?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Binomial Coefficients & Combinatorics</h2>
+      <p>The binomial coefficient \( \binom{n}{k} \) counts the number of ways to choose \( k \) successes from \( n \) trials, forming the backbone of both simulations.</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded bg-light">
+            <h6 class="fw-semibold mb-3">Definition & Properties</h6>
+            <p class="mb-2">\[ \binom{n}{k} = \frac{n!}{k!(n-k)!} \]</p>
+            <ul class="small mb-0">
+              <li><strong>Symmetry:</strong> \( \binom{n}{k} = \binom{n}{n-k} \)</li>
+              <li><strong>Recursion:</strong> \( \binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k} \)</li>
+              <li><strong>Sum:</strong> \( \sum_{k=0}^{n} \binom{n}{k} = 2^n \)</li>
+              <li><strong>Binomial PMF:</strong> \( P(X=k) = \binom{n}{k}p^k(1-p)^{n-k} \)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded bg-light">
+            <h6 class="fw-semibold mb-3">Role in Simulations</h6>
+            <ul class="small mb-0">
+              <li>Determines probability of exactly \( k \) successes</li>
+              <li>Each path with \( k \) successes has equal probability \( p^k(1-p)^{n-k} \)</li>
+              <li>Number of such paths: \( \binom{n}{k} \)</li>
+              <li>In random walk: maps \( k \) to score \( S = 2k - n \)</li>
+              <li>Combinatorial interpretation: counting lattice paths</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 border rounded">
+        <h6 class="fw-semibold mb-2">Interactive Calculator</h6>
+        <div class="row g-2 mb-3">
+          <div class="col-md-4">
+            <label class="form-label small">n (trials)</label>
+            <input type="number" class="form-control form-control-sm" id="binom-n" value="10" min="0" max="50">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">k (successes)</label>
+            <input type="number" class="form-control form-control-sm" id="binom-k" value="5" min="0" max="50">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">&nbsp;</label>
+            <button class="btn btn-dark btn-sm w-100" id="calc-binom">Calculate</button>
+          </div>
+        </div>
+        <div id="binom-result" class="p-2 bg-light rounded small"></div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Pascal's Triangle</h2>
+      <p>Pascal's triangle organizes binomial coefficients, revealing the structure underlying both simulations. Each entry equals the sum of the two entries above it, mirroring the recursive nature of combinatorial choices.</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-8">
+          <div class="p-4 border rounded bg-light">
+            <h6 class="fw-semibold mb-3">Pascal's Triangle (First 11 Rows)</h6>
+            <div id="pascal-display" class="font-monospace small text-center" style="line-height: 1.8;"></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 border rounded featured-post">
+            <h6 class="fw-semibold mb-3">Properties</h6>
+            <ul class="small mb-0">
+              <li>Row \( n \): binomial coefficients for \( n \) trials</li>
+              <li>Entry \( (n,k) \): \( \binom{n}{k} \)</li>
+              <li>Row sum: \( 2^n \) (all possible outcomes)</li>
+              <li>Symmetry about center</li>
+              <li>Contains Fibonacci sequence in diagonals</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-success" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <strong>Application:</strong> Row 10 of Pascal's triangle gives the number of random walk paths reaching each score when \( n=10 \) and \( p=0.5 \).
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Binomial Expansion</h2>
+      <p>The binomial theorem connects algebraic expansion with probability distributions, providing a generating function for binomial coefficients.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Binomial Theorem</h6>
+        <p class="mb-3">\[ (x + y)^n = \sum_{k=0}^{n} \binom{n}{k} x^k y^{n-k} \]</p>
+        <p class="mb-2"><strong>Probabilistic interpretation:</strong> Set \( x = p \) and \( y = 1-p \):</p>
+        <p class="mb-0">\[ (p + (1-p))^n = \sum_{k=0}^{n} \binom{n}{k} p^k (1-p)^{n-k} = 1 \]</p>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded">
+            <h6 class="fw-semibold mb-3">Special Cases</h6>
+            <ul class="mb-0">
+              <li>\( (1+1)^n = 2^n = \sum_{k=0}^{n} \binom{n}{k} \)</li>
+              <li>\( (1-1)^n = 0 = \sum_{k=0}^{n} (-1)^k \binom{n}{k} \)</li>
+              <li>\( (1+x)^n = \sum_{k=0}^{n} \binom{n}{k} x^k \)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded">
+            <h6 class="fw-semibold mb-3">Connection to Simulations</h6>
+            <ul class="mb-0">
+              <li>Each term represents probability of \( k \) successes</li>
+              <li>Coefficients count distinct paths</li>
+              <li>Sum equals 1 (probability normalization)</li>
+              <li>Expansion reveals all possible outcomes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 border rounded">
+        <h6 class="fw-semibold mb-2">Interactive Expansion</h6>
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label small">Power n</label>
+            <input type="number" class="form-control form-control-sm" id="expand-n" value="5" min="0" max="12">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small">&nbsp;</label>
+            <button class="btn btn-dark btn-sm w-100" id="expand-btn">Expand (x+y)^n</button>
+          </div>
+        </div>
+        <div id="expand-result" class="p-2 bg-light rounded small" style="overflow-x: auto;"></div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Fibonacci Sequence Connection</h2>
+      <p>The Fibonacci sequence appears in Pascal's triangle along shallow diagonals, connecting recursive combinatorics with the additive structure of both simulations.</p>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h6 class="fw-semibold mb-3">Fibonacci in Pascal's Triangle</h6>
+            <p class="mb-2">Sum along rising diagonals:</p>
+            <ul class="small mb-3">
+              <li>\( F_1 = \binom{0}{0} = 1 \)</li>
+              <li>\( F_2 = \binom{1}{0} = 1 \)</li>
+              <li>\( F_3 = \binom{2}{0} + \binom{1}{1} = 2 \)</li>
+              <li>\( F_4 = \binom{3}{0} + \binom{2}{1} = 3 \)</li>
+              <li>\( F_5 = \binom{4}{0} + \binom{3}{1} + \binom{2}{2} = 5 \)</li>
+            </ul>
+            <p class="small mb-0"><strong>Formula:</strong> \( F_{n+1} = \sum_{k=0}^{\lfloor n/2 \rfloor} \binom{n-k}{k} \)</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post bg-light">
+            <h6 class="fw-semibold mb-3">Fibonacci Sequence</h6>
+            <div class="mb-3">
+              <p class="small mb-1"><strong>Recurrence:</strong> \( F_n = F_{n-1} + F_{n-2} \)</p>
+              <p class="small mb-1"><strong>Initial:</strong> \( F_0 = 0, F_1 = 1 \)</p>
+            </div>
+            <div id="fibonacci-display" class="p-2 bg-white rounded small font-monospace"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 border rounded bg-light">
+        <h6 class="fw-semibold mb-3">Relevance to Random Walks</h6>
+        <p class="mb-2">Fibonacci numbers count lattice paths with restrictions:</p>
+        <ul class="mb-0">
+          <li><strong>Restricted paths:</strong> Number of ways to reach a point avoiding certain regions</li>
+          <li><strong>Step sequences:</strong> Paths using steps of size 1 or 2</li>
+          <li><strong>Combinatorial identity:</strong> \( \sum_{k=0}^{n} \binom{n-k}{k} = F_{n+1} \)</li>
+          <li>Both Fibonacci and binomial sequences emerge from recursive counting principles</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Combinatorial Coefficients in Depth</h2>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100">
+            <h6 class="fw-semibold mb-3"><i class="bi bi-diagram-3 me-2"></i>Counting Paths</h6>
+            <p class="small mb-2">In an \( n \)-step random walk:</p>
+            <ul class="small mb-0">
+              <li>Total paths: \( 2^n \)</li>
+              <li>Paths with \( k \) ups: \( \binom{n}{k} \)</li>
+              <li>Each path probability: \( p^k(1-p)^{n-k} \)</li>
+              <li>Probability of \( k \) ups: \( \binom{n}{k}p^k(1-p)^{n-k} \)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100">
+            <h6 class="fw-semibold mb-3"><i class="bi bi-grid-3x3 me-2"></i>Lattice Paths</h6>
+            <p class="small mb-2">Grid interpretation:</p>
+            <ul class="small mb-0">
+              <li>Start at origin \( (0,0) \)</li>
+              <li>End at \( (n, 2k-n) \)</li>
+              <li>Each path: sequence of R/U moves</li>
+              <li>\( \binom{n}{k} \) distinct paths</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-4 border rounded h-100">
+            <h6 class="fw-semibold mb-3"><i class="bi bi-shuffle me-2"></i>Permutations</h6>
+            <p class="small mb-2">Arrangements:</p>
+            <ul class="small mb-0">
+              <li>Arrange \( k \) successes, \( n-k \) failures</li>
+              <li>Total arrangements: \( \frac{n!}{k!(n-k)!} \)</li>
+              <li>Each arrangement is a trajectory</li>
+              <li>Equivalent to choosing positions</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>n</th>
+              <th>k</th>
+              <th>\( \binom{n}{k} \)</th>
+              <th>Interpretation (n=10 example)</th>
+            </tr>
+          </thead>
+          <tbody id="combo-examples-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Mathematical Relationships Summary</h2>
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+            <h6 class="fw-semibold mb-3">From Bernoulli to Binomial</h6>
+            <p class="small mb-2"><strong>Step 1:</strong> Bernoulli trial \( X_i \sim \text{Bernoulli}(p) \)</p>
+            <p class="small mb-2"><strong>Step 2:</strong> Sum of \( n \) trials \( X = \sum_{i=1}^{n} X_i \)</p>
+            <p class="small mb-2"><strong>Step 3:</strong> \( X \sim \text{Binomial}(n,p) \)</p>
+            <p class="small mb-2"><strong>Step 4:</strong> PMF uses \( \binom{n}{k} \) from Pascal's triangle</p>
+            <p class="small mb-0"><strong>Step 5:</strong> Transform to random walk: \( S = 2X - n \)</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded featured-post" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+            <h6 class="fw-semibold mb-3">Unifying Framework</h6>
+            <ul class="small mb-0">
+              <li><strong>Bernoulli process:</strong> Foundation for both simulations</li>
+              <li><strong>Binomial distribution:</strong> Describes cumulative outcomes</li>
+              <li><strong>Pascal's triangle:</strong> Organizes combinatorial structure</li>
+              <li><strong>Binomial coefficients:</strong> Count paths and probability weights</li>
+              <li><strong>Fibonacci:</strong> Special diagonal sums in Pascal</li>
+              <li><strong>LLN:</strong> \( \bar{X}_n \to p \) as \( n \to \infty \)</li>
+              <li><strong>CLT:</strong> \( \frac{X - np}{\sqrt{np(1-p)}} \to \mathcal{N}(0,1) \)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
+    </div>
+  </footer>
+
+  <script>
+    // Binomial coefficient calculator
+    function factorial(n) {
+      if (n <= 1) return 1;
+      let result = 1;
+      for (let i = 2; i <= n; i++) result *= i;
+      return result;
+    }
+
+    function binomialCoeff(n, k) {
+      if (k > n || k < 0) return 0;
+      if (k === 0 || k === n) return 1;
+      return factorial(n) / (factorial(k) * factorial(n - k));
+    }
+
+    document.getElementById('calc-binom').addEventListener('click', function() {
+      const n = parseInt(document.getElementById('binom-n').value);
+      const k = parseInt(document.getElementById('binom-k').value);
+      
+      if (n < 0 || k < 0 || k > n) {
+        document.getElementById('binom-result').innerHTML = '<span class="text-danger">Invalid input: ensure 0 ≤ k ≤ n</span>';
+        return;
+      }
+
+      const coeff = binomialCoeff(n, k);
+      const score = 2 * k - n;
+      
+      document.getElementById('binom-result').innerHTML = `
+        <p class="mb-1"><strong>Result:</strong> \\( \\binom{${n}}{${k}} = ${coeff.toLocaleString()} \\)</p>
+        <p class="mb-1"><strong>Interpretation:</strong> There are ${coeff.toLocaleString()} ways to choose ${k} successes from ${n} trials.</p>
+        <p class="mb-0"><strong>Random Walk:</strong> ${k} successes correspond to final score S = ${score}.</p>
+      `;
+      MathJax.typesetPromise();
+    });
+
+    // Generate Pascal's Triangle
+    function generatePascal(rows) {
+      const triangle = [];
+      for (let n = 0; n < rows; n++) {
+        const row = [];
+        for (let k = 0; k <= n; k++) {
+          row.push(binomialCoeff(n, k));
+        }
+        triangle.push(row);
+      }
+      return triangle;
+    }
+
+    function displayPascal() {
+      const triangle = generatePascal(11);
+      let html = '';
+      triangle.forEach(row => {
+        const spaces = ' '.repeat((10 - row.length) * 2);
+        html += spaces + row.map(n => n.toString().padStart(3)).join('  ') + '<br>';
+      });
+      document.getElementById('pascal-display').innerHTML = html;
+    }
+
+    // Generate Fibonacci sequence
+    function generateFibonacci(n) {
+      const fib = [0, 1];
+      for (let i = 2; i <= n; i++) {
+        fib.push(fib[i-1] + fib[i-2]);
+      }
+      return fib;
+    }
+
+    function displayFibonacci() {
+      const fib = generateFibonacci(15);
+      document.getElementById('fibonacci-display').textContent = fib.join(', ');
+    }
+
+    // Binomial expansion
+    document.getElementById('expand-btn').addEventListener('click', function() {
+      const n = parseInt(document.getElementById('expand-n').value);
+      
+      if (n < 0 || n > 12) {
+        document.getElementById('expand-result').innerHTML = '<span class="text-danger">Please use 0 ≤ n ≤ 12</span>';
+        return;
+      }
+
+      let terms = [];
+      for (let k = 0; k <= n; k++) {
+        const coeff = binomialCoeff(n, k);
+        let term = '';
+        
+        if (coeff > 1 || (k === 0 && n === 0)) {
+          term += coeff;
+        }
+        
+        if (k > 0) {
+          term += 'x';
+          if (k > 1) term += '^' + k;
+        }
+        
+        if (n - k > 0) {
+          term += 'y';
+          if (n - k > 1) term += '^' + (n - k);
+        }
+        
+        if (k === 0 && n === 0) term = '1';
+        
+        terms.push(term);
+      }
+      
+      document.getElementById('expand-result').innerHTML = `
+        <p class="mb-0"><strong>(x + y)^${n} =</strong> ${terms.join(' + ')}</p>
+      `;
+    });
+
+    // Populate combinatorial examples table
+    function populateComboTable() {
+      const tbody = document.getElementById('combo-examples-tbody');
+      tbody.innerHTML = '';
+      
+      const examples = [
+        [10, 0, 'All 10 weeks breached → Score = -10'],
+        [10, 2, '2 secure, 8 breached → Score = -6'],
+        [10, 5, 'Equal secure/breached → Score = 0'],
+        [10, 8, '8 secure, 2 breached → Score = +6'],
+        [10, 10, 'All 10 weeks secure → Score = +10']
+      ];
+      
+      examples.forEach(([n, k, desc]) => {
+        const coeff = binomialCoeff(n, k);
+        const row = tbody.insertRow();
+        row.innerHTML = `
+          <td class="text-center">${n}</td>
+          <td class="text-center">${k}</td>
+          <td class="text-center fw-bold">${coeff.toLocaleString()}</td>
+          <td class="small">${desc}</td>
+        `;
+      });
+    }
+
+    // Initialize on load
+    window.addEventListener('load', function() {
+      displayPascal();
+      displayFibonacci();
+      populateComboTable();
+      document.getElementById('calc-binom').click();
+      document.getElementById('expand-btn').click();
+    });
+  </script>
+
+</body>
+</html>
