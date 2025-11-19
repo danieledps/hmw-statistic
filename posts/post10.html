@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulating the Poisson Counting Process - Statistics Homework X</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-10 mx-auto">
+         <p class="text-muted mb-2">
+           <i class="bi bi-calendar3 me-1"></i>November 19, 2025
+         </p>
+         <h1 class="display-6 gradient-text mb-2">Simulating the Poisson Counting Process</h1>
+         <p class="lead mb-0">From discrete approximation to continuous-time stochastic processes — Daniele De Pascali 1984462</p>
+       </div>
+     </div>
+   </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Introduction to Counting Processes</h2>
+      <p>A <strong>counting process</strong> \( \{N(t), t \geq 0\} \) is a stochastic process that represents the total number of events that have occurred by time \( t \). These processes are fundamental in modeling random arrivals, failures, requests, or any phenomenon where discrete events occur over continuous time.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Defining Properties of a Counting Process</h6>
+        <ol class="mb-0">
+          <li><strong>Initial condition:</strong> \( N(0) = 0 \) (no events at time zero)</li>
+          <li><strong>Non-negative integers:</strong> \( N(t) \in \{0, 1, 2, 3, \ldots\} \) for all \( t \geq 0 \)</li>
+          <li><strong>Non-decreasing:</strong> If \( s < t \), then \( N(s) \leq N(t) \)</li>
+          <li><strong>Right-continuous:</strong> The process has right-continuous sample paths with left limits</li>
+          <li><strong>Increments:</strong> For \( s < t \), \( N(t) - N(s) \) represents the number of events in interval \( (s, t] \)</li>
+        </ol>
+      </div>
+
+      <p><strong>Examples in cybersecurity and beyond:</strong> Network packet arrivals, intrusion attempts, login requests, server failures, customer arrivals, radioactive decay events, and cyberattack occurrences all follow counting processes.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Simulation Approach: Discrete Approximation</h2>
+      <p>To simulate a continuous-time counting process over interval \( [0, T] \) with average rate \( \lambda \), we employ a discrete approximation method that divides time into small subintervals.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Step</th>
+              <th>Description</th>
+              <th>Mathematical Expression</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. Discretize</strong></td>
+              <td>Divide \( [0, T] \) into \( n \) subintervals</td>
+              <td>Width \( \Delta t = \frac{T}{n} \)</td>
+            </tr>
+            <tr>
+              <td><strong>2. Probability</strong></td>
+              <td>Event probability in each subinterval</td>
+              <td>\( p = \frac{\lambda \Delta t}{1} = \frac{\lambda T}{n} \)</td>
+            </tr>
+            <tr>
+              <td><strong>3. Generate</strong></td>
+              <td>For each subinterval, generate Bernoulli trial</td>
+              <td>\( X_i \sim \text{Bernoulli}(p) \)</td>
+            </tr>
+            <tr>
+              <td><strong>4. Count</strong></td>
+              <td>Cumulative sum gives total events by time \( t \)</td>
+              <td>\( N(t) = \sum_{i=1}^{\lfloor nt/T \rfloor} X_i \)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Key insight:</strong> As \( n \to \infty \) (subintervals become infinitesimally small), this discrete approximation converges to a continuous-time Poisson process. For practical simulation, \( n = 5000 \) provides excellent approximation for \( T = 1 \).</p>
+
+      <p><strong>Why this works:</strong> In a small time interval \( \Delta t \), the probability of an event is approximately \( \lambda \Delta t \), and the probability of multiple events is negligible (\( o(\Delta t) \)). This captures the essence of a Poisson process.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">The Poisson Process: Theoretical Foundation</h2>
+      <p>The simulation approximates a <strong>Poisson process</strong>, one of the most important stochastic processes in probability theory. A Poisson process with rate \( \lambda \) is characterized by three fundamental properties.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Defining Properties of a Poisson Process</h6>
+        
+        <p class="mb-3"><strong>Property 1: Independent Increments</strong></p>
+        <p class="mb-3">The numbers of events in disjoint time intervals are independent. If \( (t_1, t_2] \) and \( (t_3, t_4] \) are disjoint intervals, then \( N(t_2) - N(t_1) \) and \( N(t_4) - N(t_3) \) are independent random variables.</p>
+        
+        <p class="mb-3"><strong>Property 2: Stationary Increments</strong></p>
+        <p class="mb-3">The distribution of events in an interval depends only on the length of the interval, not its location. For any \( s, t \geq 0 \), \( N(t+s) - N(s) \) has the same distribution as \( N(t) \).</p>
+        
+        <p class="mb-0"><strong>Property 3: Poisson Distribution</strong></p>
+        <p class="mb-0">The number of events in any interval of length \( t \) follows a Poisson distribution:</p>
+        <p class="text-center mb-0 mt-2">\[ P(N(t) = k) = \frac{(\lambda t)^k e^{-\lambda t}}{k!}, \quad k = 0, 1, 2, \ldots \]</p>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="p-4 border rounded h-100">
+            <h6 class="fw-semibold mb-3">Expected Value and Variance</h6>
+            <p class="mb-2">For a Poisson process \( N(t) \) with rate \( \lambda \):</p>
+            <p class="mb-2">\[ E[N(t)] = \lambda t \]</p>
+            <p class="mb-2">\[ \text{Var}(N(t)) = \lambda t \]</p>
+            <p class="mb-0 small">The mean and variance are equal, a characteristic property of the Poisson distribution.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-4 border rounded h-100">
+            <h6 class="fw-semibold mb-3">Interarrival Times</h6>
+            <p class="mb-2">The time between consecutive events follows an exponential distribution:</p>
+            <p class="mb-2">\[ T_i \sim \text{Exp}(\lambda) \]</p>
+            <p class="mb-2">\[ f(t) = \lambda e^{-\lambda t}, \quad t \geq 0 \]</p>
+            <p class="mb-0 small">This is due to the memoryless property of exponential distributions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">The Rate Parameter λ</h2>
+      <p>The rate parameter \( \lambda \) is the fundamental characteristic of a Poisson process, determining both the frequency and distribution of events.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Interpretation</th>
+              <th>Mathematical Expression</th>
+              <th>Practical Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Average rate</strong></td>
+              <td>\( \lambda = \frac{E[N(t)]}{t} \)</td>
+              <td>Expected events per unit time</td>
+            </tr>
+            <tr>
+              <td><strong>Instantaneous rate</strong></td>
+              <td>\( \lambda = \lim_{\Delta t \to 0} \frac{P(N(\Delta t) = 1)}{\Delta t} \)</td>
+              <td>Probability intensity at any moment</td>
+            </tr>
+            <tr>
+              <td><strong>Reciprocal of mean waiting time</strong></td>
+              <td>\( \lambda = \frac{1}{E[T]} \)</td>
+              <td>Higher λ means shorter waits between events</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Units and interpretation:</strong> If time is measured in seconds and \( \lambda = 5 \), we expect 5 events per second on average. If \( \lambda = 0.1 \), we expect 1 event every 10 seconds. The parameter \( \lambda \) scales linearly with expected counts: over interval \( [0, t] \), expect \( \lambda t \) events.</p>
+
+      <p><strong>In cybersecurity:</strong> A network intrusion detection system might observe attack attempts at rate \( \lambda = 0.5 \) per hour, meaning an average of one attack every 2 hours, or 12 attacks per day.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Interactive Simulation</h2>
+      <p>Simulate a Poisson counting process by setting the rate parameter \( \lambda \) and observing the resulting event counts and visualization.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Simulation Parameters</h6>
+        <div class="row g-3 mb-3">
+          <div class="col-md-3">
+            <label class="form-label small">Rate λ (events/unit time)</label>
+            <input type="number" class="form-control form-control-sm" id="lambda" value="3" step="0.5" min="0.1" max="20">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Time interval T</label>
+            <input type="number" class="form-control form-control-sm" id="time-t" value="1" step="0.1" min="0.1" max="5">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Number of subintervals n</label>
+            <input type="number" class="form-control form-control-sm" id="num-intervals" value="5000" step="100" min="100" max="10000">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">&nbsp;</label>
+            <button class="btn btn-dark btn-sm w-100" id="run-simulation">Run Simulation</button>
+          </div>
+        </div>
+        <div id="simulation-results" class="mb-3"></div>
+        <canvas id="process-canvas" width="800" height="300" style="border: 1px solid #dee2e6; max-width: 100%;"></canvas>
+        <p class="small text-muted mt-2 mb-0">The step function shows N(t), the cumulative count of events over time. Red dots indicate event occurrences.</p>
+      </div>
+
+      <div class="p-4 border rounded">
+        <h6 class="fw-semibold mb-3">Simulation Analysis</h6>
+        <div id="analysis-results"></div>
+      </div>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Convergence to the Poisson Process</h2>
+      <p>The discrete approximation converges to a true Poisson process as the number of subintervals \( n \to \infty \). This convergence can be understood through several perspectives.</p>
+
+      <p><strong>Limit theorem:</strong> Let \( X_1, X_2, \ldots, X_n \) be independent Bernoulli trials with \( P(X_i = 1) = \lambda T / n \). Then as \( n \to \infty \), the sum \( \sum_{i=1}^{n} X_i \) converges in distribution to \( \text{Poisson}(\lambda T) \).</p>
+
+      <p><strong>Why it works:</strong> The Poisson distribution arises as the limit of binomial distributions \( \text{Binomial}(n, p) \) when \( n \to \infty \) and \( p \to 0 \) such that \( np = \lambda \) remains constant. Our simulation implements exactly this limiting process.</p>
+
+      <p><strong>Practical convergence:</strong> For \( n = 5000 \) and moderate \( \lambda \) (say, \( \lambda < 10 \)), the approximation error is negligible. The discrete simulation produces sample paths virtually indistinguishable from a true Poisson process.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Applications in Cybersecurity</h2>
+      <p>Poisson processes model numerous phenomena in cybersecurity and network systems where events occur randomly over time.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Application</th>
+              <th>Event Type</th>
+              <th>Typical Rate λ</th>
+              <th>Analysis Goal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Intrusion Detection</strong></td>
+              <td>Attack attempts</td>
+              <td>0.1 - 10 per hour</td>
+              <td>Predict attack frequency, resource allocation</td>
+            </tr>
+            <tr>
+              <td><strong>Network Traffic</strong></td>
+              <td>Packet arrivals</td>
+              <td>10³ - 10⁶ per second</td>
+              <td>Queue analysis, bandwidth planning</td>
+            </tr>
+            <tr>
+              <td><strong>Server Requests</strong></td>
+              <td>HTTP requests</td>
+              <td>1 - 1000 per second</td>
+              <td>Load balancing, capacity planning</td>
+            </tr>
+            <tr>
+              <td><strong>System Failures</strong></td>
+              <td>Component failures</td>
+              <td>0.001 - 0.1 per day</td>
+              <td>Reliability analysis, maintenance scheduling</td>
+            </tr>
+            <tr>
+              <td><strong>DDoS Detection</strong></td>
+              <td>Suspicious connections</td>
+              <td>Variable, anomaly if λ spikes</td>
+              <td>Anomaly detection, threshold setting</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Detection strategy:</strong> Establish baseline rate \( \lambda_0 \) during normal operation. Monitor observed counts \( N(t) \). If \( N(t) \) significantly exceeds \( \lambda_0 t + k\sqrt{\lambda_0 t} \) (for threshold \( k \approx 3 \)), flag as anomaly.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Properties and Statistical Tests</h2>
+      <p>The Poisson process has well-defined statistical properties that can be tested empirically from simulated or observed data.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Key Statistical Properties</h6>
+        
+        <p class="mb-2"><strong>Distribution of N(t):</strong> For fixed \( t \), \( N(t) \sim \text{Poisson}(\lambda t) \)</p>
+        <p class="mb-3">Test: Generate many realizations, construct histogram, compare to theoretical PMF</p>
+        
+        <p class="mb-2"><strong>Mean-variance equality:</strong> \( E[N(t)] = \text{Var}(N(t)) = \lambda t \)</p>
+        <p class="mb-3">Test: Compute sample mean and variance, check if approximately equal</p>
+        
+        <p class="mb-2"><strong>Interarrival times:</strong> Exponentially distributed with parameter \( \lambda \)</p>
+        <p class="mb-3">Test: Extract waiting times between events, fit to exponential distribution</p>
+        
+        <p class="mb-0"><strong>Independent increments:</strong> Counts in disjoint intervals are independent</p>
+        <p class="mb-0">Test: Compute correlation between counts in non-overlapping intervals (should be near zero)</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    function runSimulation() {
+      const lambda = parseFloat(document.getElementById('lambda').value);
+      const T = parseFloat(document.getElementById('time-t').value);
+      const n = parseInt(document.getElementById('num-intervals').value);
+      
+      const dt = T / n;
+      const p = lambda * dt;
+      
+      // Generate Bernoulli trials
+      let events = [];
+      let counts = [0];
+      let times = [0];
+      let totalCount = 0;
+      
+      for (let i = 0; i < n; i++) {
+        const hasEvent = Math.random() < p;
+        if (hasEvent) {
+          totalCount++;
+          events.push((i + 0.5) * dt);
+        }
+        counts.push(totalCount);
+        times.push((i + 1) * dt);
+      }
+      
+      // Display results
+      const expectedCount = lambda * T;
+      const variance = totalCount; // Sample: would need multiple runs for true variance
+      const theoreticalVariance = lambda * T;
+      
+      document.getElementById('simulation-results').innerHTML = `
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="p-2 bg-white rounded border">
+              <p class="small text-muted mb-1">Total Events</p>
+              <p class="h5 mb-0">${totalCount}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-2 bg-white rounded border">
+              <p class="small text-muted mb-1">Expected</p>
+              <p class="h5 mb-0">${expectedCount.toFixed(2)}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-2 bg-white rounded border">
+              <p class="small text-muted mb-1">Rate λ</p>
+              <p class="h5 mb-0">${lambda}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-2 bg-white rounded border">
+              <p class="small text-muted mb-1">Subintervals</p>
+              <p class="h5 mb-0">${n}</p>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Draw the process
+      const canvas = document.getElementById('process-canvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      ctx.clearRect(0, 0, width, height);
+      
+      // Axes
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(50, height - 30);
+      ctx.lineTo(width - 20, height - 30);
+      ctx.moveTo(50, 20);
+      ctx.lineTo(50, height - 30);
+      ctx.stroke();
+      
+      // Labels
+      ctx.fillStyle = '#333';
+      ctx.font = '12px sans-serif';
+      ctx.fillText('Time', width / 2, height - 5);
+      ctx.save();
+      ctx.translate(15, height / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText('N(t)', 0, 0);
+      ctx.restore();
+      
+      // Scale
+      const xScale = (width - 70) / T;
+      const maxCount = Math.max(totalCount, expectedCount + 10);
+      const yScale = (height - 50) / maxCount;
+      
+      // Plot step function
+      ctx.strokeStyle = '#2c5364';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(50, height - 30);
+      
+      for (let i = 0; i < times.length; i++) {
+        const x = 50 + times[i] * xScale;
+        const y = height - 30 - counts[i] * yScale;
+        if (i === 0) {
+          ctx.lineTo(x, height - 30);
+        } else {
+          ctx.lineTo(x, height - 30 - counts[i-1] * yScale);
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+      
+      // Plot event points
+      ctx.fillStyle = '#dc3545';
+      for (let i = 0; i < events.length; i++) {
+        const x = 50 + events[i] * xScale;
+        const y = height - 30 - (i + 1) * yScale;
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+      
+      // Expected line
+      ctx.strokeStyle = '#28a745';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(50, height - 30);
+      ctx.lineTo(50 + T * xScale, height - 30 - expectedCount * yScale);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Time markers
+      ctx.fillStyle = '#666';
+      ctx.font = '10px sans-serif';
+      for (let i = 0; i <= 5; i++) {
+        const t = (i / 5) * T;
+        const x = 50 + t * xScale;
+        ctx.fillText(t.toFixed(1), x - 10, height - 15);
+      }
+      
+      // Count markers
+      for (let i = 0; i <= 5; i++) {
+        const c = Math.round((i / 5) * maxCount);
+        const y = height - 30 - c * yScale;
+        ctx.fillText(c, 25, y + 3);
+      }
+      
+      // Analysis
+      let interarrivals = [];
+      for (let i = 1; i < events.length; i++) {
+        interarrivals.push(events[i] - events[i-1]);
+      }
+      const meanInterarrival = interarrivals.length > 0 ? 
+        interarrivals.reduce((a,b) => a+b, 0) / interarrivals.length : 0;
+      const theoreticalInterarrival = 1 / lambda;
+      
+      document.getElementById('analysis-results').innerHTML = `
+        <div class="row g-3">
+          <div class="col-md-6">
+            <p class="mb-2"><strong>Process Characteristics:</strong></p>
+            <ul class="small mb-0">
+              <li>Observed count: ${totalCount} events</li>
+              <li>Expected count: \\( E[N(${T})] = \\lambda \\cdot ${T} = ${expectedCount.toFixed(2)} \\)</li>
+              <li>Deviation: ${(totalCount - expectedCount).toFixed(2)} (${Math.abs((totalCount - expectedCount)/expectedCount * 100).toFixed(1)}%)</li>
+              <li>Theoretical variance: \\( \\text{Var}(N(${T})) = ${theoreticalVariance.toFixed(2)} \\)</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <p class="mb-2"><strong>Interarrival Times:</strong></p>
+            <ul class="small mb-0">
+              <li>Number of intervals: ${interarrivals.length}</li>
+              <li>Mean interarrival: ${meanInterarrival.toFixed(4)} time units</li>
+              <li>Theoretical mean: \\( 1/\\lambda = ${theoreticalInterarrival.toFixed(4)} \\)</li>
+              <li>These should follow Exp(\\( \\lambda \\)) distribution</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="my-3">
+        <p class="small mb-1"><strong>Interpretation:</strong> This simulation approximates a Poisson process with rate \\( \\lambda = ${lambda} \\). The green dashed line shows the expected trajectory \\( E[N(t)] = \\lambda t \\). The actual process (blue) fluctuates around this expectation with variance \\( \\lambda t \\). As the number of subintervals increases, this discrete approximation converges to a true continuous-time Poisson process.</p>
+      `;
+      
+      MathJax.typesetPromise();
+    }
+    
+    document.getElementById('run-simulation').addEventListener('click', runSimulation);
+    window.addEventListener('load', runSimulation);
+  </script>
+
+</body>
+</html>

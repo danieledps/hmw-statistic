@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Axiomatic Foundations of Probability Theory - Statistics Homework IX</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="../css/custom.css">
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-cyber">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="../index.html">
+        <i class="bi bi-shield-lock-fill me-2"></i>Statistics Blog
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">
+              <i class="bi bi-house-fill me-1"></i>Home
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero-section py-5">
+   <div class="container">
+     <div class="row">
+       <div class="col-lg-10 mx-auto">
+         <p class="text-muted mb-2">
+           <i class="bi bi-calendar3 me-1"></i>November 19, 2025
+         </p>
+         <h1 class="display-6 gradient-text mb-2">Axiomatic Foundations of Probability Theory</h1>
+         <p class="lead mb-0">Interpretations, measure theory, and fundamental derivations — Daniele De Pascali 1984462</p>
+       </div>
+     </div>
+   </div>
+  </header>
+
+  <main class="container py-5">
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Interpretations of Probability</h2>
+      <p>Probability has been interpreted in fundamentally different ways throughout history, each offering unique perspectives on uncertainty and randomness. The major interpretations reflect different philosophical approaches to what probability means.</p>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Interpretation</th>
+              <th>Core Idea</th>
+              <th>Definition</th>
+              <th>Key Limitation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Classical</strong></td>
+              <td>Equal likelihood</td>
+              <td>\( P(A) = \frac{\text{favorable}}{\text{total}} \)</td>
+              <td>Requires finite, equally likely outcomes</td>
+            </tr>
+            <tr>
+              <td><strong>Frequentist</strong></td>
+              <td>Long-run frequency</td>
+              <td>\( P(A) = \lim_{n \to \infty} \frac{n_A}{n} \)</td>
+              <td>Cannot handle single events</td>
+            </tr>
+            <tr>
+              <td><strong>Bayesian</strong></td>
+              <td>Degree of belief</td>
+              <td>\( P(A|B) = \frac{P(B|A)P(A)}{P(B)} \)</td>
+              <td>Subjective priors</td>
+            </tr>
+            <tr>
+              <td><strong>Geometric</strong></td>
+              <td>Ratio of measures</td>
+              <td>\( P(A) = \frac{\mu(A)}{\mu(\Omega)} \)</td>
+              <td>Requires measurable sets</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Classical interpretation</strong> is based on Laplace's principle of indifference and works for symmetric situations like dice and cards. However, it faces circular reasoning—how to define "equally likely" without already knowing probabilities?</p>
+
+      <p><strong>Frequentist interpretation</strong> defines probability as relative frequency in repeated trials. It's objective and based on observable data, but cannot assign probabilities to unique, non-repeatable events.</p>
+
+      <p><strong>Bayesian interpretation</strong> treats probability as degree of belief, updated with new evidence via Bayes' theorem. It can handle unique events but depends on subjective prior beliefs.</p>
+
+      <p><strong>Geometric interpretation</strong> generalizes the classical approach to continuous spaces using measure theory, providing a rigorous mathematical foundation for continuous distributions.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">How Axiomatic Approach Resolves Inconsistencies</h2>
+      <p>Kolmogorov's axiomatic approach (1933) provides a unified mathematical framework that transcends philosophical debates. Rather than defining what probability "is," it specifies what probability must "satisfy."</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Kolmogorov's Three Axioms</h6>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="p-3 border rounded bg-white">
+              <p class="mb-2"><strong>Axiom 1: Non-negativity</strong></p>
+              <p class="mb-0">\[ P(A) \geq 0 \quad \forall A \in \mathcal{F} \]</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-3 border rounded bg-white">
+              <p class="mb-2"><strong>Axiom 2: Normalization</strong></p>
+              <p class="mb-0">\[ P(\Omega) = 1 \]</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-3 border rounded bg-white">
+              <p class="mb-2"><strong>Axiom 3: Countable Additivity</strong></p>
+              <p class="mb-0">\[ P\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} P(A_i) \]</p>
+              <p class="small text-muted mb-0">For disjoint events</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p><strong>Resolution of conceptual conflicts:</strong> The axioms provide unification (all interpretations must satisfy them), consistency (preventing logical contradictions), generality (working for finite, countable, and uncountable spaces), and derivability (all probability rules follow from these three axioms). Classical interpretation doesn't need to justify "equally likely" beforehand; frequentist axioms describe limiting behavior without requiring infinite repetitions; Bayesian priors are valid as long as they satisfy axioms; and the σ-algebra structure ensures only well-defined events receive probabilities.</p>
+
+      <p>The axiomatic approach separates mathematical structure (what all interpretations must obey) from philosophical meaning (what probability represents), allowing different interpretations to coexist while ensuring consistency.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Probability Theory and Measure Theory</h2>
+      <p>Probability theory is a special case of measure theory where the total measure equals 1. This connection provides the rigorous foundation for modern probability.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">The Probability Space: \( (\Omega, \mathcal{F}, P) \)</h6>
+        <p class="mb-2"><strong>\( \Omega \) (Sample Space):</strong> Set of all possible outcomes</p>
+        <p class="mb-2"><strong>\( \mathcal{F} \) (σ-Algebra):</strong> Collection of measurable events (subsets to which we assign probabilities). A σ-algebra must: (1) contain \( \Omega \), (2) be closed under complements, and (3) be closed under countable unions.</p>
+        <p class="mb-0"><strong>\( P \) (Probability Measure):</strong> Function \( P: \mathcal{F} \to [0,1] \) satisfying Kolmogorov's axioms</p>
+        <p class="mt-2 mb-0"><em>Why σ-algebras matter:</em> Not all subsets can be assigned probabilities. The σ-algebra excludes non-measurable sets, ensuring probability is well-defined.</p>
+      </div>
+
+      <div class="table-responsive mb-4">
+        <table class="table table-bordered table-sm">
+          <thead class="table-light">
+            <tr>
+              <th>Measure Theory</th>
+              <th>Probability Theory</th>
+              <th>Relationship</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Measure space \( (\Omega, \mathcal{F}, \mu) \)</td>
+              <td>Probability space \( (\Omega, \mathcal{F}, P) \)</td>
+              <td>\( P \) is a measure with \( P(\Omega) = 1 \)</td>
+            </tr>
+            <tr>
+              <td>Measurable set \( A \in \mathcal{F} \)</td>
+              <td>Event \( A \in \mathcal{F} \)</td>
+              <td>Events are measurable sets</td>
+            </tr>
+            <tr>
+              <td>Measurable function</td>
+              <td>Random variable</td>
+              <td>\( X: \Omega \to \mathbb{R} \) where \( \{\omega : X(\omega) \leq x\} \in \mathcal{F} \)</td>
+            </tr>
+            <tr>
+              <td>Lebesgue integral \( \int f \, d\mu \)</td>
+              <td>Expected value \( E[X] \)</td>
+              <td>Expectation is integration w.r.t. \( P \)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>A random variable \( X: \Omega \to \mathbb{R} \) is a measurable function where \( \{\omega \in \Omega : X(\omega) \leq x\} \in \mathcal{F} \) for all \( x \in \mathbb{R} \). This ensures we can compute \( P(X \in B) \) for any Borel set \( B \subseteq \mathbb{R} \).</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Deriving Subadditivity from Axioms</h2>
+      <p>The subadditivity property (Boole's inequality) states that the probability of a union is at most the sum of individual probabilities. This follows directly from Kolmogorov's axioms.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Subadditivity Theorem</h6>
+        <p class="mb-2">For events \( A_1, A_2, \ldots \in \mathcal{F} \) (not necessarily disjoint):</p>
+        <p class="text-center mb-3">\[ P\left(\bigcup_{i=1}^{n} A_i\right) \leq \sum_{i=1}^{n} P(A_i) \]</p>
+        
+        <p class="mb-2"><strong>Proof for two events:</strong></p>
+        <p class="mb-1">Write \( A \cup B = A \cup (B \setminus A) \) as disjoint union. By Axiom 3: \( P(A \cup B) = P(A) + P(B \setminus A) \). Since \( B \setminus A \subseteq B \), monotonicity gives \( P(B \setminus A) \leq P(B) \). Therefore \( P(A \cup B) \leq P(A) + P(B) \).</p>
+        
+        <p class="mb-1 mt-3"><strong>General proof:</strong> By induction. Base case is trivial. For \( n+1 \) events, treat \( \bigcup_{i=1}^{n+1} A_i = (\bigcup_{i=1}^{n} A_i) \cup A_{n+1} \). Apply two-event case: \( P(\bigcup_{i=1}^{n+1} A_i) \leq P(\bigcup_{i=1}^{n} A_i) + P(A_{n+1}) \leq \sum_{i=1}^{n} P(A_i) + P(A_{n+1}) = \sum_{i=1}^{n+1} P(A_i) \).</p>
+      </div>
+
+      <p><strong>Intuition:</strong> Summing individual probabilities counts overlaps multiple times, leading to overestimation. Equality holds if and only if events are disjoint.</p>
+    </section>
+
+    <section class="mb-5">
+      <h2 class="h4 mb-3">Deriving Inclusion-Exclusion Principle</h2>
+      <p>The inclusion-exclusion principle provides an exact formula for the probability of a union by systematically correcting for overlaps.</p>
+
+      <div class="p-4 border rounded bg-light mb-4">
+        <h6 class="fw-semibold mb-3">Inclusion-Exclusion Principle</h6>
+        <p class="mb-3">For events \( A_1, A_2, \ldots, A_n \):</p>
+        <p class="mb-3">\[ P\left(\bigcup_{i=1}^{n} A_i\right) = \sum_{i} P(A_i) - \sum_{i < j} P(A_i \cap A_j) + \sum_{i < j < k} P(A_i \cap A_j \cap A_k) - \cdots + (-1)^{n+1} P(A_1 \cap \cdots \cap A_n) \]</p>
+        
+        <p class="mb-2"><strong>Proof for two events:</strong> Write \( A \cup B = A \cup (B \setminus A) \) disjointly. Apply additivity: \( P(A \cup B) = P(A) + P(B \setminus A) \). Since \( B = (B \setminus A) \cup (A \cap B) \) disjointly, \( P(B \setminus A) = P(B) - P(A \cap B) \). Substitute: \( P(A \cup B) = P(A) + P(B) - P(A \cap B) \).</p>
+        
+        <p class="mb-0 mt-3"><strong>Proof for three events:</strong> Apply two-event formula to \( (A \cup B) \cup C \): \( P(A \cup B \cup C) = P(A \cup B) + P(C) - P((A \cup B) \cap C) \). Expand \( P(A \cup B) = P(A) + P(B) - P(A \cap B) \). Note \( (A \cup B) \cap C = (A \cap C) \cup (B \cap C) \), so \( P((A \cup B) \cap C) = P(A \cap C) + P(B \cap C) - P(A \cap B \cap C) \). Combining gives the formula.</p>
+      </div>
+
+      <div class="p-3 border rounded mb-4">
+        <h6 class="fw-semibold mb-2">Interactive Calculator</h6>
+        <div class="row g-2 mb-3">
+          <div class="col-md-4">
+            <label class="form-label small">P(A)</label>
+            <input type="number" class="form-control form-control-sm" id="prob-a" value="0.5" step="0.01" min="0" max="1">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">P(B)</label>
+            <input type="number" class="form-control form-control-sm" id="prob-b" value="0.4" step="0.01" min="0" max="1">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label small">P(A ∩ B)</label>
+            <input type="number" class="form-control form-control-sm" id="prob-ab" value="0.2" step="0.01" min="0" max="1">
+          </div>
+        </div>
+        <button class="btn btn-dark btn-sm mb-3" id="calc-incl-excl">Calculate</button>
+        <div id="incl-excl-result" class="p-2 bg-light rounded small"></div>
+      </div>
+
+      <p><strong>Pattern:</strong> Alternating signs with term \( (-1)^{k+1} \) for \( k \)-way intersections. Each element in exactly \( k \) sets contributes \( \binom{k}{1} - \binom{k}{2} + \cdots = 1 \) to the final sum, ensuring each element is counted exactly once.</p>
+    </section>
+
+  </main>
+
+  <footer class="py-4">
+    <div class="container">
+      <p class="mb-0 text-muted">2025 Statistics Blog</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    document.getElementById('calc-incl-excl').addEventListener('click', function() {
+      const pA = parseFloat(document.getElementById('prob-a').value);
+      const pB = parseFloat(document.getElementById('prob-b').value);
+      const pAB = parseFloat(document.getElementById('prob-ab').value);
+      
+      if (pA < 0 || pA > 1 || pB < 0 || pB > 1 || pAB < 0 || pAB > 1) {
+        document.getElementById('incl-excl-result').innerHTML = '<span class="text-danger">All probabilities must be between 0 and 1</span>';
+        return;
+      }
+      
+      if (pAB > Math.min(pA, pB)) {
+        document.getElementById('incl-excl-result').innerHTML = '<span class="text-danger">P(A ∩ B) cannot exceed min(P(A), P(B))</span>';
+        return;
+      }
+      
+      const pUnion = pA + pB - pAB;
+      const subadditivity = pA + pB;
+      
+      document.getElementById('incl-excl-result').innerHTML = `
+        <p class="mb-1"><strong>Inclusion-Exclusion:</strong> \\( P(A \\cup B) = ${pA} + ${pB} - ${pAB} = ${pUnion.toFixed(4)} \\)</p>
+        <p class="mb-1"><strong>Subadditivity bound:</strong> \\( ${subadditivity.toFixed(4)} \\)</p>
+        <p class="mb-0"><strong>Overlap correction:</strong> \\( ${pAB.toFixed(4)} \\)</p>
+      `;
+      MathJax.typesetPromise();
+    });
+    
+    window.addEventListener('load', function() {
+      document.getElementById('calc-incl-excl').click();
+    });
+  </script>
+
+</body>
+</html>
